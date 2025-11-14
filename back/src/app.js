@@ -51,6 +51,16 @@ if (fs.existsSync(STATIC_DIR) && config.env !== 'production') {
   });
 }
 
+if (config.env === 'production') {
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    const target = `https://www.psiloup.com.br${req.originalUrl || ''}`;
+    return res.redirect(302, target);
+  });
+}
+
 async function start() {
   await sequelize.sync({ alter: true });
   await runSeeds();
