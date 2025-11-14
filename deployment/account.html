@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minha Conta - PsiloUp</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="assets/css/psiloup.css" />
+  <link rel="stylesheet" href="assets/css/psiloup-modern.css" />
+</head>
+<body>
+  <div id="wrapper">
+    <header class="site-header">
+      <div class="container site-header__wrap">
+        <nav class="site-nav">
+          <button class="site-nav__toggle" aria-label="Abrir menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul class="site-nav__list">
+            <li><a href="quem-somos.html">Quem somos</a></li>
+            <li><a href="formulacao.html">Formulação</a></li>
+            <li><a href="#influencers">Seja um Influencer</a></li>
+          </ul>
+        </nav>
+        <a class="site-logo" href="index.html" aria-label="PsiloUp">
+          <img src="images/PsiloUp_logo_sem_fundo.png" alt="PsiloUp" />
+        </a>
+        <div class="site-actions">
+          <a class="site-actions__link" href="account.html">Minha conta</a>
+          <a class="site-actions__icon" href="#search" aria-label="Pesquisar"><i class="fas fa-search"></i></a>
+          <a class="site-actions__icon" href="account.html" aria-label="Conta"><i class="far fa-user"></i></a>
+          <a class="site-actions__icon" href="#cart" aria-label="Carrinho"><i class="fas fa-shopping-basket"></i></a>
+        </div>
+      </div>
+    </header>
+
+    <section id="main" class="container">
+      <header class="major">
+        <h2>Minha conta</h2>
+        <p>Gerencie seus pedidos, endereços e perfil.</p>
+      </header>
+
+      <div class="row gtr-50 gtr-uniform">
+        <div class="col-12">
+          <article class="bundle-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3>Pedidos</h3>
+              <button id="logout" class="button small">Sair</button>
+            </div>
+            <div id="orders-list">
+              <p>Carregando pedidos...</p>
+            </div>
+          </article>
+        </div>
+        <div class="col-12">
+          <article class="bundle-card">
+            <h3>Endereços</h3>
+            <div id="addresses-list">
+              <p>Carregando endereços...</p>
+            </div>
+            <details>
+              <summary>Adicionar novo endereço</summary>
+              <form id="address-form" style="margin-top:1rem;">
+                <div class="row gtr-25 gtr-uniform">
+                  <div class="col-6 col-12-small">
+                    <label for="addr-label">Identificação</label>
+                    <input type="text" id="addr-label" placeholder="Ex: Casa, Trabalho" />
+                  </div>
+                  <div class="col-6 col-12-small">
+                    <label for="addr-recipient">Destinatário</label>
+                    <input type="text" id="addr-recipient" placeholder="Quem recebe a entrega" />
+                  </div>
+                  <div class="col-6 col-12-small">
+                    <label for="addr-street">Rua</label>
+                    <input type="text" id="addr-street" required />
+                  </div>
+                  <div class="col-3 col-12-small">
+                    <label for="addr-number">Número</label>
+                    <input type="text" id="addr-number" />
+                  </div>
+                  <div class="col-3 col-12-small">
+                    <label for="addr-complement">Complemento</label>
+                    <input type="text" id="addr-complement" />
+                  </div>
+                  <div class="col-6 col-12-small">
+                    <label for="addr-neighborhood">Bairro</label>
+                    <input type="text" id="addr-neighborhood" />
+                  </div>
+                  <div class="col-3 col-12-small">
+                    <label for="addr-city">Cidade</label>
+                    <input type="text" id="addr-city" required />
+                  </div>
+                  <div class="col-3 col-12-small">
+                    <label for="addr-state">UF</label>
+                    <input type="text" id="addr-state" required />
+                  </div>
+                  <div class="col-3 col-12-small">
+                    <label for="addr-cep">CEP</label>
+                    <input type="text" id="addr-cep" required />
+                  </div>
+                  <div class="col-12">
+                    <label class="checkbox">
+                      <input type="checkbox" id="addr-default" />
+                      <span>Definir como endereço padrão</span>
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="button">Salvar endereço</button>
+              </form>
+            </details>
+          </article>
+        </div>
+        <div class="col-12">
+          <article class="bundle-card">
+            <h3>Perfil</h3>
+            <div id="profile-info">
+              <p>Carregando perfil...</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    window.PSILOUP_API_BASE = 'https://psiloupback-production.up.railway.app/api';
+  </script>
+  <script src="assets/js/core/config.js"></script>
+  <script src="assets/js/core/auth.js"></script>
+  <script src="assets/js/core/api.js"></script>
+  <script src="assets/js/core/catalog.js"></script>
+  <script src="assets/js/core/cart.js"></script>
+  <script src="assets/js/psiloup-modern.js"></script>
+  <script src="assets/js/account.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login e Cadastro - PsiloUp</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="assets/css/psiloup.css" />
+  <link rel="stylesheet" href="assets/css/psiloup-modern.css" />
+</head>
+<body>
+  <div id="wrapper">
+    <header class="site-header">
+      <div class="container site-header__wrap">
+        <nav class="site-nav">
+          <button class="site-nav__toggle" aria-label="Abrir menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul class="site-nav__list">
+            <li><a href="quem-somos.html">Quem somos</a></li>
+            <li><a href="formulacao.html">Formulação</a></li>
+            <li><a href="#influencers">Seja um Influencer</a></li>
+          </ul>
+        </nav>
+        <a class="site-logo" href="index.html" aria-label="PsiloUp">
+          <img src="images/PsiloUp_logo_sem_fundo.png" alt="PsiloUp" />
+        </a>
+        <div class="site-actions">
+          <a class="site-actions__link" href="login.html">Minha conta</a>
+          <a class="site-actions__icon" href="#search" aria-label="Pesquisar"><i class="fas fa-search"></i></a>
+          <a class="site-actions__icon" href="login.html" aria-label="Conta"><i class="far fa-user"></i></a>
+          <a class="site-actions__icon" href="#cart" aria-label="Carrinho"><i class="fas fa-shopping-basket"></i></a>
+        </div>
+      </div>
+    </header>
+
+    <section id="main" class="container">
+      <header class="major">
+        <h2>Minha conta</h2>
+        <p>Entre com sua conta ou cadastre-se para acompanhar seus pedidos, endereços e checkout.</p>
+      </header>
+
+      <div class="row gtr-50 gtr-uniform">
+        <div class="col-6 col-12-small">
+          <article class="bundle-card">
+            <h3>Entrar</h3>
+            <form id="login-form">
+              <label for="login-email">E-mail</label>
+              <input type="email" id="login-email" required placeholder="seu@email.com" />
+              <label for="login-password">Senha</label>
+              <input type="password" id="login-password" required placeholder="Sua senha" />
+              <button type="submit" class="button primary">Entrar</button>
+              <p id="login-message" aria-live="polite"></p>
+            </form>
+          </article>
+        </div>
+        <div class="col-6 col-12-small">
+          <article class="bundle-card">
+            <h3>Cadastrar</h3>
+            <form id="register-form">
+              <label for="reg-name">Nome completo</label>
+              <input type="text" id="reg-name" required placeholder="Seu nome completo" />
+              <label for="reg-email">E-mail</label>
+              <input type="email" id="reg-email" required placeholder="seu@email.com" />
+              <label for="reg-phone">Celular</label>
+              <input type="tel" id="reg-phone" placeholder="(11) 99999-9999" />
+              <label for="reg-cpf">CPF</label>
+              <input type="text" id="reg-cpf" placeholder="000.000.000-00" />
+              <label for="reg-password">Senha</label>
+              <input type="password" id="reg-password" required placeholder="Crie uma senha" />
+              <label for="reg-password2">Confirmar senha</label>
+              <input type="password" id="reg-password2" required placeholder="Repita sua senha" />
+              <button type="submit" class="button">Cadastrar</button>
+              <p id="register-message" aria-live="polite"></p>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    window.PSILOUP_API_BASE = 'https://psiloupback-production.up.railway.app/api';
+  </script>
+  <script src="assets/js/core/config.js"></script>
+  <script src="assets/js/core/auth.js"></script>
+  <script src="assets/js/core/api.js"></script>
+  <script src="assets/js/core/catalog.js"></script>
+  <script src="assets/js/core/cart.js"></script>
+  <script src="assets/js/psiloup-modern.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>
