@@ -200,6 +200,32 @@
 .form-hint.warn { color: rgba(255, 120, 120, 0.9); }
 .form-hint.ok { color: rgba(0, 230, 255, 0.95); }
 
+/* Multi-step form */
+.msf-input,
+.msf-textarea {
+  width: 100%;
+  max-width: 450px;
+  margin: 10px auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: rgba(247,251,255,0.95);
+  padding: 12px 14px;
+}
+.msf-input::placeholder,
+.msf-textarea::placeholder { color: rgba(247,251,255,0.55); }
+.msf-input:focus,
+.msf-textarea:focus { outline: 2px solid var(--cyan); border-color: var(--cyan); }
+.msf-textarea { min-height: 120px; }
+
+.button--dark {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+.button--dark:hover { opacity: 0.9; }
+
 /* Badge do carrinho */
 .cart-badge {
   position: absolute;

@@ -6,6 +6,7 @@ const checkoutRoutes = require('./checkout');
 const shippingRoutes = require('./shipping');
 const couponRoutes = require('./coupons');
 const paymentRoutes = require('./payment');
+const influencerRoutes = require('./influencers');
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.use('/checkout', checkoutRoutes);
 router.use('/shipping', shippingRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/payment', paymentRoutes);
+router.use('/influencers', influencerRoutes);
 
 module.exports = router;
 

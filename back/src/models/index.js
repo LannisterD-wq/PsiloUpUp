@@ -5,6 +5,7 @@ const Product = require('./Product');
 const Order = require('./Order');
 const OrderItem = require('./OrderItem');
 const Coupon = require('./Coupon');
+const InfluencerApplication = require('./InfluencerApplication');
 
 User.hasMany(Address, { foreignKey: 'user_id', as: 'addresses' });
 Address.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
@@ -29,5 +30,6 @@ module.exports = {
   Order,
   OrderItem,
   Coupon,
+  InfluencerApplication,
 };
 

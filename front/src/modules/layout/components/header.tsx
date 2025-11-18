@@ -39,7 +39,7 @@ export default function Header() {
               <li><Link className="menu-highlight" href="/produtos">Comprar</Link></li>
               <li><Link href="/quem-somos">Quem somos</Link></li>
               <li><Link href="/formulacao">Formulação</Link></li>
-              <li><a href="#influencers">Seja um Influencer</a></li>
+              <li><Link href="/seja-um-influencer">Seja um Influencer</Link></li>
             </ul>
           </nav>
           <Link className="site-logo" href="/" aria-label="PsiloUp">
