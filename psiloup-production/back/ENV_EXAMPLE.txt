@@ -1,0 +1,52 @@
+# Configuração do Servidor
+PORT=3000
+NODE_ENV=development
+
+# JWT - Secret para tokens de autenticação
+# IMPORTANTE: Use uma string aleatória forte em produção
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+
+# Banco de Dados
+# SQLite (desenvolvimento)
+DB_DIALECT=sqlite
+DB_STORAGE=./data.sqlite
+DB_LOGGING=false
+
+# PostgreSQL (produção - se usar)
+# DATABASE_URL=postgresql://user:password@host:port/database
+
+# Frontend URL (para CORS)
+FRONTEND_URL=http://localhost:3001
+
+# Correios - Frete
+# CEP de origem da loja (formato: 01310100)
+SHIPPING_ORIGIN_CEP=01310100
+
+# Código e senha da empresa (opcional - só se tiver contrato com Correios)
+# CORREIOS_EMPRESA=
+# CORREIOS_SENHA=
+
+# Peso padrão dos produtos em kg (usado se o produto não tiver peso definido)
+PRODUCT_WEIGHT_KG=0.30
+
+# Dimensões padrão do pacote (em cm)
+DEFAULT_PACKAGE_HEIGHT_CM=10
+DEFAULT_PACKAGE_WIDTH_CM=15
+DEFAULT_PACKAGE_LENGTH_CM=20
+DEFAULT_PACKAGE_WEIGHT_KG=0.5
+
+# Frete Grátis - Valor mínimo em centavos (ex: 39900 = R$ 399,00)
+FREE_SHIPPING_THRESHOLD_CENTS=39900
+
+# Frete Fixo - Valor base em centavos (ex: 1990 = R$ 19,90)
+SHIP_BASE_CENTS=1990
+
+# Melhor Envio (opcional - se usar)
+# MELHORENVIO_TOKEN=
+
+# Mercado Pago (opcional - se usar)
+# MP_ACCESS_TOKEN=
+# BACK_URL_SUCCESS=http://localhost:3001/checkout/success
+# BACK_URL_FAILURE=http://localhost:3001/checkout/failure
+# BACK_URL_PENDING=http://localhost:3001/checkout/pending
+

@@ -23,4 +23,4 @@ front/out/
 deployment/
 Loja-virtual-master/
 server/
-psiloup-production/
+# psiloup-production/ - Removido para permitir commit da versão de produção
