@@ -1,7 +1,7 @@
 const axios = require('axios');
 const config = require('../config/env');
 
-async function createPreference({ items, payer }) {
+async function createPreference({ items, payer, externalReference }) {
   if (!config.mercadoPago.accessToken) {
     throw new Error('Configuração Mercado Pago ausente.');
   }
@@ -9,6 +9,8 @@ async function createPreference({ items, payer }) {
     items,
     back_urls: config.mercadoPago.backUrls,
     auto_return: 'approved',
+    notification_url: config.mercadoPago.notificationUrl,
+    external_reference: externalReference ? String(externalReference) : undefined,
   };
   if (payer && payer.email) {
     payload.payer = {

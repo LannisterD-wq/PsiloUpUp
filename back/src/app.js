@@ -9,7 +9,9 @@ const routes = require('./routes');
 const { sequelize } = require('./models');
 const { runSeeds } = require('./utils/seed');
 
-const allowedOrigins = [
+const defaultAllowedOrigins = [
+  'http://localhost:8000',
+  'http://127.0.0.1:8000',
   'http://localhost:8080',
   'http://127.0.0.1:8080',
   'http://localhost:5500',
@@ -17,15 +19,20 @@ const allowedOrigins = [
   'https://psiloup.com.br',
   'https://www.psiloup.com.br',
 ];
+const extraOrigins = (config.corsOrigins || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter((s) => s.length > 0);
+const allowedOrigins = [...defaultAllowedOrigins, ...extraOrigins];
 
 const app = express();
 
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+      if (!origin) return callback(null, true);
+      if (!config.isProduction) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -62,10 +69,10 @@ if (config.env === 'production') {
 }
 
 async function start() {
-  await sequelize.sync({ alter: true });
+  const syncOptions = config.isProduction ? { alter: true } : { force: true };
+  await sequelize.sync(syncOptions);
   await runSeeds();
   app.listen(config.port, () => {
-    // eslint-disable-next-line no-console
     console.log(`Servidor iniciado em http://localhost:${config.port}`);
   });
 }

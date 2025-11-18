@@ -16,6 +16,7 @@ const config = {
   isProduction,
   port: Number(env('PORT', 3000)),
   jwtSecret: env('JWT_SECRET', 'dev-secret'),
+  corsOrigins: env('CORS_ORIGINS', ''),
   database: {
     url: env('DATABASE_URL', ''),
     dialect: env('DB_DIALECT', 'sqlite'),
@@ -41,6 +42,7 @@ const config = {
       failure: env('BACK_URL_FAILURE', 'http://localhost:8080/'),
       pending: env('BACK_URL_PENDING', 'http://localhost:8080/'),
     },
+    notificationUrl: env('MP_NOTIFICATION_URL', 'http://localhost:3000/api/payment/webhook'),
   },
 };
 

@@ -18,3 +18,9 @@ Thumbs.db
 *.swp
 *.swo
 *~
+front/.next/
+front/out/
+deployment/
+Loja-virtual-master/
+server/
+psiloup-production/

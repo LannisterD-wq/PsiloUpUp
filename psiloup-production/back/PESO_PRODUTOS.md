@@ -38,3 +38,4 @@ UPDATE products SET weightGrams = 300 WHERE weightGrams IS NULL;
 O sistema usa o peso do produto do banco de dados se disponível, caso contrário usa 0.30kg por padrão.
 
 
+

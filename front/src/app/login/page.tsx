@@ -26,6 +26,28 @@ export default function LoginPage() {
   const [regPassword, setRegPassword] = useState("")
   const [regPassword2, setRegPassword2] = useState("")
 
+  const formatPhone = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 11)
+    const d = digits
+    if (d.length <= 2) return d
+    if (d.length <= 7) return `(${d.slice(0,2)}) ${d.slice(2)}`
+    if (d.length <= 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`
+    return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7,11)}`
+  }
+
+  const formatCpf = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 11)
+    const d = digits
+    if (d.length <= 3) return d
+    if (d.length <= 6) return `${d.slice(0,3)}.${d.slice(3)}`
+    if (d.length <= 9) return `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6)}`
+    return `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6,9)}-${d.slice(9,11)}`
+  }
+
+  const isStrongPassword = (pwd: string) => {
+    return pwd.length >= 6 && /[A-Z]/.test(pwd) && /\d/.test(pwd)
+  }
+
   useEffect(() => {
     if (isAuthenticated()) {
       router.push(redirect)
@@ -52,6 +74,10 @@ export default function LoginPage() {
       setMessage("As senhas não coincidem")
       return
     }
+    if (!isStrongPassword(regPassword)) {
+      setMessage("Senha deve ter 8+ caracteres, com letra maiúscula, minúscula e número.")
+      return
+    }
     setLoading(true)
     setMessage("")
     try {
@@ -59,8 +85,8 @@ export default function LoginPage() {
         name: regName,
         email: regEmail,
         password: regPassword,
-        phone: regPhone || undefined,
-        cpf: regCpf || undefined,
+        phone: regPhone.replace(/\D/g, "") || undefined,
+        cpf: regCpf.replace(/\D/g, "") || undefined,
       })
       router.push(redirect)
     } catch (error: any) {
@@ -103,6 +129,7 @@ export default function LoginPage() {
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                   />
+                  <small className="form-hint">Use pelo menos 6 caracteres.</small>
                   <button type="submit" className="button primary" disabled={loading}>
                     {loading ? "Entrando..." : "Entrar"}
                   </button>
@@ -138,7 +165,7 @@ export default function LoginPage() {
                     id="reg-phone"
                     placeholder="(11) 99999-9999"
                     value={regPhone}
-                    onChange={(e) => setRegPhone(e.target.value)}
+                    onChange={(e) => setRegPhone(formatPhone(e.target.value))}
                   />
                   <label htmlFor="reg-cpf">CPF</label>
                   <input
@@ -146,7 +173,7 @@ export default function LoginPage() {
                     id="reg-cpf"
                     placeholder="000.000.000-00"
                     value={regCpf}
-                    onChange={(e) => setRegCpf(e.target.value)}
+                    onChange={(e) => setRegCpf(formatCpf(e.target.value))}
                   />
                   <label htmlFor="reg-password">Senha</label>
                   <input
@@ -157,6 +184,9 @@ export default function LoginPage() {
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
                   />
+                  <small className={isStrongPassword(regPassword) ? "form-hint ok" : "form-hint warn"}>
+                    Mínimo 6 caracteres, com letra maiúscula e número.
+                  </small>
                   <label htmlFor="reg-password2">Confirmar senha</label>
                   <input
                     type="password"
@@ -166,6 +196,9 @@ export default function LoginPage() {
                     value={regPassword2}
                     onChange={(e) => setRegPassword2(e.target.value)}
                   />
+                  <small className={regPassword && regPassword === regPassword2 ? "form-hint ok" : "form-hint warn"}>
+                    As senhas devem coincidir.
+                  </small>
                   <button type="submit" className="button" disabled={loading}>
                     {loading ? "Cadastrando..." : "Cadastrar"}
                   </button>

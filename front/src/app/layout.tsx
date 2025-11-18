@@ -14,7 +14,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <link rel="stylesheet" href="/css/main.css" />
         <link rel="stylesheet" href="/css/psiloup.css" />
         <link rel="stylesheet" href="/css/psiloup-modern.css" />
-        <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
         <link rel="stylesheet" href="/css/psiloup-nextjs-fix.css" />
       </head>
       <body>

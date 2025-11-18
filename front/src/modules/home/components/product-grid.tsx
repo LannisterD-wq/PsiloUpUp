@@ -43,11 +43,11 @@ export default function ProductGrid({ products }: ProductGridProps) {
     } else if (sku === "UP-BURN") {
       return {
         name: "UP BURN • Energia & Metabolismo",
-        description: "Energy Flow System™ com Cordyceps, Maca, Guaraná nativo, Gynostemma e Shilajit para energia celular constante e termogênese equilibrada.",
+        description: "Energia constante e metabolismo equilibrado com apoio ao emagrecimento, sem picos." ,
         bullets: [
-          "Cordyceps de alta pureza para VO₂ máximo",
-          "Maca, Guaraná nativo e Gynostemma sinérgicos",
-          "Shilajit para absorção mineral e ATP elevado",
+          "Apoio ao emagrecimento de forma equilibrada",
+          "Energia diária estável e sem picos",
+          "Absorção otimizada para melhor desempenho",
         ]
       }
     } else {

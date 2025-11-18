@@ -3,6 +3,7 @@
 import { PsiloUpProduct } from "@lib/data/products-psiloup-server"
 import { addToCart } from "@lib/data/cart"
 import { formatCurrency } from "@lib/util/format-currency"
+import Link from "next/link"
 
 interface ProductDetailProps {
   product: PsiloUpProduct
@@ -19,23 +20,62 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   }
 
   const imageUrl = `/images/${product.sku === "UP-MIND" ? "MIND" : product.sku === "UP-BURN" ? "BURN" : "Stack_Duplo"}-removebg-preview.png`
+  const isMind = product.sku === "UP-MIND"
+  const isBurn = product.sku === "UP-BURN"
+  const isStack = product.sku === "STACK-DUPLO"
+  const timeBullets = isBurn
+    ? [
+        "Dia 1-3: energia estável e menos fadiga",
+        "Dia 4-7: metabolismo mais ativo e menor apetite por picos",
+        "Após 2 semanas: apoio ao emagrecimento com rotina e alimentação",
+      ]
+    : isMind
+    ? [
+        "Dia 1-3: clareza mental e humor mais equilibrado",
+        "Dia 4-7: foco contínuo e menos procrastinação",
+        "Após 2 semanas: memória e foco sustentados",
+      ]
+    : [
+        "Dia 1-3: energia e foco mais estáveis",
+        "Dia 4-7: rotina mais produtiva com menos quedas",
+        "Após 2 semanas: desempenho mental e físico combinados",
+      ]
+  const whoBullets = isBurn
+    ? [
+        "Quem busca emagrecimento equilibrado",
+        "Rotinas com treinos leves a moderados",
+        "Pessoas com fadiga diária e picos de energia",
+      ]
+    : isMind
+    ? [
+        "Estudantes e profissionais em rotina intensa",
+        "Apresentações, reuniões e tarefas que exigem foco",
+        "Gamers e quem precisa performance cognitiva",
+      ]
+    : [
+        "Jovens e adultos que querem foco + energia",
+        "Rotinas com estudo, trabalho e atividade física",
+        "Quem quer produtividade sem ansiedade",
+      ]
 
   return (
     <>
       <section className="hero">
         <div className="container hero__grid">
           <div className="hero__content">
-            <span className="hero__eyebrow">Focus Core Blend™</span>
-            <h1 className="hero__title">{product.name} — clareza mental sem ansiedade</h1>
+            <span className="hero__eyebrow">{isBurn ? "Energy Flow System™" : isMind ? "Focus Core Blend™" : "Stack Duplo"}</span>
+            <h1 className="hero__title">{product.name}</h1>
             <p className="hero__subtitle">
-              Fórmula exclusiva da PsiloUp com adaptógenos certificados para produtores de conteúdo, executivos e
-              líderes que precisam manter raciocínio rápido e controle emocional em rotinas intensas.
+              {isBurn
+                ? "Energia constante, metabolismo equilibrado e apoio ao emagrecimento para o dia a dia."
+                : isMind
+                  ? "Foco limpo, memória e estabilidade emocional para rotinas intensas."
+                  : "Combo completo para desempenho mental e físico no cotidiano."}
             </p>
             <div className="hero__actions">
               <div className="bundle-card__price">
                 <strong>{formatCurrency(product.priceCents)}</strong>
-                <span>PIX 5% OFF • {formatCurrency(Math.floor(product.priceCents * 0.95))}</span>
-                <span>Cartão: até 12x • ex.: 3x de {formatCurrency(Math.ceil(product.priceCents / 3))}</span>
+                <span>Ex.: 3x de {formatCurrency(Math.ceil(product.priceCents / 3))}</span>
               </div>
               <div className="bundle-card__cta">
                 <button
@@ -44,12 +84,33 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 >
                   Adicionar ao carrinho
                 </button>
+                <Link className="button button--ghost" href="/formulacao">
+                  Ver formulação
+                </Link>
               </div>
             </div>
             <div className="hero__badges">
-              <div className="hero__badge">30 comprimidos para uso diário</div>
-              <div className="hero__badge">Foco, memória e estabilidade emocional</div>
-              <div className="hero__badge">Laudos por lote e QR code de rastreio</div>
+              {isMind && (
+                <>
+                  <div className="hero__badge">30 comprimidos para uso diário</div>
+                  <div className="hero__badge">Foco, memória e estabilidade emocional</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
+                </>
+              )}
+              {isBurn && (
+                <>
+                  <div className="hero__badge">Metabolismo e energia balanceados</div>
+                  <div className="hero__badge">Apoio ao emagrecimento equilibrado</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
+                </>
+              )}
+              {isStack && (
+                <>
+                  <div className="hero__badge">Dois potes: Mind + Burn</div>
+                  <div className="hero__badge">Desempenho mental e físico</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
+                </>
+              )}
             </div>
           </div>
           <div className="hero__media">
@@ -75,17 +136,17 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             <div className="guide-card">
               <h4>Linha do tempo</h4>
               <ul>
-                <li>Dia 1-3: energia mental estável, humor mais equilibrado.</li>
-                <li>Dia 4-7: foco contínuo, menos procrastinação.</li>
-                <li>Após 2 semanas: memória e clareza mental sustentadas.</li>
+                {timeBullets.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
               </ul>
             </div>
             <div className="guide-card">
               <h4>Para quem é</h4>
               <ul>
-                <li>Creators, apresentadores, devs, traders e líderes sob pressão.</li>
-                <li>Pessoas que buscam foco limpo sem ansiedade ou crashes.</li>
-                <li>Rotinas híbridas que alternam gravação, live e reuniões.</li>
+                {whoBullets.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
               </ul>
             </div>
           </div>
@@ -95,27 +156,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
       <section>
         <div className="container stack">
           <div>
-            <h2 className="section-title">Compra segura • {formatCurrency(product.priceCents)}</h2>
+            <h2 className="section-title">Compra segura</h2>
             <p className="section-copy">
-              Pote com 30 cápsulas. Assinatura com 10% OFF e frete reduzido. Atendimento humano durante todo o processo.
+              Pagamento via Mercado Pago com confirmação imediata. Envio rastreado e atendimento humano.
             </p>
-          </div>
-          <div className="purchase-steps">
-            <div className="purchase-step">
-              <span>1</span>
-              <h3>Feche o pedido</h3>
-              <p>Receba link de pagamento via WhatsApp ou e-mail. PIX, cartão (1-12x) e recorrência automática.</p>
-            </div>
-            <div className="purchase-step">
-              <span>2</span>
-              <h3>Confirmação expressa</h3>
-              <p>Nota fiscal e confirmação de pagamento em até 24h úteis.</p>
-            </div>
-            <div className="purchase-step">
-              <span>3</span>
-              <h3>Envio rastreado</h3>
-              <p>Correios + Melhor Envio com código de rastreio automático para o seu WhatsApp.</p>
-            </div>
           </div>
           <p className="section-copy" style={{ fontSize: "0.8rem", color: "rgba(255, 255, 255, 0.55)" }}>
             Suplemento alimentar. Não é medicamento. Consulte seu médico ou nutricionista em caso de condições

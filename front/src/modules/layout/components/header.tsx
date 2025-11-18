@@ -4,10 +4,12 @@ import Link from "next/link"
 import { getCartCount } from "@lib/data/cart"
 import { useEffect, useState } from "react"
 import CartDrawer from "./cart-drawer"
+import SearchModal from "./search-modal.tsx"
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(0)
   const [cartOpen, setCartOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -34,6 +36,7 @@ export default function Header() {
               <span></span>
             </button>
             <ul className="site-nav__list">
+              <li><Link className="menu-highlight" href="/produtos">Comprar</Link></li>
               <li><Link href="/quem-somos">Quem somos</Link></li>
               <li><Link href="/formulacao">Formulação</Link></li>
               <li><a href="#influencers">Seja um Influencer</a></li>
@@ -43,15 +46,15 @@ export default function Header() {
             <img src="/images/PsiloUp_logo_sem_fundo.png" alt="PsiloUp" />
           </Link>
           <div className="site-actions">
-            <Link className="site-actions__link" href="/login">Minha conta</Link>
-            <a className="site-actions__icon" href="#search" aria-label="Pesquisar">
+            <Link className="site-actions__link" href="/account">Minha conta</Link>
+            <button className="site-actions__icon" onClick={() => setSearchOpen(true)} aria-label="Pesquisar">
               <i className="fas fa-search"></i>
-            </a>
-            <Link className="site-actions__icon" href="/login" aria-label="Conta">
+            </button>
+            <Link className="site-actions__icon" href="/account" aria-label="Conta">
               <i className="far fa-user"></i>
             </Link>
             <button
-              className="site-actions__icon"
+              className="site-actions__icon site-actions__icon--cart"
               onClick={() => setCartOpen(true)}
               aria-label="Carrinho"
             >
@@ -62,6 +65,7 @@ export default function Header() {
         </div>
       </header>
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   )
 }

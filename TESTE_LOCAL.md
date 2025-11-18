@@ -1,137 +1,112 @@
-# 🧪 Guia de Teste Local - PsiloUp
+# 🧪 Teste Local - PsiloUp
 
-## Passo 1: Preparar Backend
+## ✅ Servidores Iniciados
 
+Os servidores foram iniciados em janelas separadas do PowerShell:
+
+### Backend
+- **URL:** http://localhost:3000
+- **Health Check:** http://localhost:3000/health
+- **API:** http://localhost:3000/api
+
+### Frontend
+- **URL:** http://localhost:8000
+- **Status:** Compilando (pode levar alguns minutos na primeira vez)
+
+---
+
+## 🔍 Como Verificar
+
+### 1. Verificar Backend
+Abra no navegador ou use curl:
 ```bash
-# Terminal 1
-cd back
-npm install
+# Health check
+curl http://localhost:3000/health
+
+# Lista de produtos
+curl http://localhost:3000/api/catalog/products
 ```
 
-Criar arquivo `back/.env`:
-```env
+### 2. Verificar Frontend
+Abra no navegador:
+```
+http://localhost:8000
+```
+
+---
+
+## ⚙️ Configurações Aplicadas
+
+### Backend (`back/src/app.js`)
+- ✅ CORS configurado para aceitar `http://localhost:8000`
+- ✅ Porta: 3000 (padrão)
+- ✅ Banco de dados: SQLite (`./data.sqlite`)
+
+### Frontend (`front/`)
+- ✅ API URL: `http://localhost:3000/api` (via `NEXT_PUBLIC_API_URL`)
+- ✅ Base URL: `http://localhost:8000` (via `NEXT_PUBLIC_BASE_URL`)
+- ✅ Porta: 8000
+
+---
+
+## 📝 Variáveis de Ambiente
+
+### Backend (`.env` - se necessário)
+```
 PORT=3000
 NODE_ENV=development
-JWT_SECRET=dev-secret-key-change-in-production
+JWT_SECRET=dev-secret-key-local
 DB_PATH=./data.sqlite
-CORS_ORIGIN=http://localhost:8000
 ```
 
-```bash
-npm run dev
+### Frontend (`.env.local` - se necessário)
 ```
-
-✅ Backend rodando em `http://localhost:3000`
-
-## Passo 2: Preparar Frontend
-
-```bash
-# Terminal 2
-cd front
-yarn install
-```
-
-Criar arquivo `front/.env.local`:
-```env
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 NEXT_PUBLIC_BASE_URL=http://localhost:8000
 ```
 
-```bash
-yarn dev
-```
+---
 
-✅ Frontend rodando em `http://localhost:8000`
-
-## Passo 3: Testar Funcionalidades
-
-### ✅ Home Page
-1. Acesse `http://localhost:8000`
-2. Verifique se os produtos aparecem
-3. Clique em "Adicionar ao carrinho"
-4. Verifique se o carrinho abre
-
-### ✅ Carrinho
-1. Clique no ícone do carrinho
-2. Verifique se os produtos aparecem
-3. Teste aumentar/diminuir quantidade
-4. Teste remover item
-5. Teste aplicar cupom (se tiver)
-
-### ✅ Login/Registro
-1. Acesse `http://localhost:8000/login`
-2. Teste criar uma conta nova
-3. Teste fazer login
-4. Verifique se redireciona corretamente
-
-### ✅ Checkout
-1. Adicione produtos ao carrinho
-2. Acesse `http://localhost:8000/checkout`
-3. Verifique se está logado (senão, redireciona para login)
-4. Digite um CEP e calcule frete
-5. Selecione endereço de entrega
-6. Clique em "Pagar com Mercado Pago"
-7. Verifique se redireciona para o Mercado Pago
-
-### ✅ Área do Cliente
-1. Acesse `http://localhost:8000/account`
-2. Verifique se aparece seus pedidos
-3. Teste adicionar um endereço
-4. Verifique se o endereço aparece na lista
-
-### ✅ Páginas de Produto
-1. Acesse `http://localhost:8000/produtos/UP-MIND`
-2. Verifique se o produto aparece
-3. Teste adicionar ao carrinho
-
-### ✅ Páginas Institucionais
-1. Acesse `http://localhost:8000/quem-somos`
-2. Acesse `http://localhost:8000/formulacao`
-3. Verifique se as páginas carregam
-
-## 🔍 Verificar no Console
-
-Abra o DevTools (F12) e verifique:
-- ✅ Sem erros no console
-- ✅ Requisições para API funcionando
-- ✅ localStorage sendo usado corretamente
-
-## 🐛 Problemas Comuns
+## 🐛 Troubleshooting
 
 ### Backend não inicia
-- Verifique se a porta 3000 está livre
-- Verifique se o `.env` está correto
-- Verifique se `npm install` foi executado
+1. Verifique se a porta 3000 está livre
+2. Verifique os logs na janela do PowerShell do backend
+3. Verifique se o banco de dados existe (`back/data.sqlite`)
 
-### Frontend não inicia
-- Verifique se a porta 8000 está livre
-- Verifique se `yarn install` foi executado
-- Verifique se o `.env.local` está correto
+### Frontend não compila
+1. Aguarde alguns minutos (primeira compilação é mais lenta)
+2. Verifique os logs na janela do PowerShell do frontend
+3. Verifique se todas as dependências estão instaladas:
+   ```bash
+   cd front
+   yarn install
+   ```
 
-### API não conecta
-- Verifique se o backend está rodando
-- Verifique `NEXT_PUBLIC_API_URL` no `.env.local`
-- Verifique CORS no backend
+### Frontend não conecta ao backend
+1. Verifique se o backend está rodando em `http://localhost:3000`
+2. Verifique se o CORS está configurado corretamente
+3. Verifique o console do navegador (F12) para erros
 
-### Carrinho não funciona
-- Verifique localStorage no DevTools
-- Verifique se os produtos estão sendo carregados
-- Verifique erros no console
+---
 
-## ✅ Checklist Final
+## 🚀 Próximos Passos
 
-- [ ] Backend rodando sem erros
-- [ ] Frontend rodando sem erros
-- [ ] Home page carrega produtos
-- [ ] Carrinho funciona
-- [ ] Login/registro funciona
-- [ ] Checkout funciona
-- [ ] Área do cliente funciona
-- [ ] Páginas de produto funcionam
-- [ ] Páginas institucionais funcionam
-- [ ] Sem erros no console
+1. ✅ Verificar se o backend está respondendo
+2. ✅ Verificar se o frontend está compilando
+3. ✅ Testar acessar produtos no frontend
+4. ✅ Testar adicionar ao carrinho
+5. ✅ Testar checkout
 
-## 🚀 Próximo Passo: Deploy
+---
 
-Após testar localmente, siga o guia em `DEPLOY_RAILWAY.md` para fazer deploy no Railway.
+## 📞 Comandos Úteis
 
+### Parar os servidores
+- Feche as janelas do PowerShell ou pressione `Ctrl+C` em cada uma
+
+### Reiniciar
+- Execute novamente o script `iniciar-local.bat` ou os comandos PowerShell
+
+### Ver logs
+- Os logs aparecem nas janelas do PowerShell abertas

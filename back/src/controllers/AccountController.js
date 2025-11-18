@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Address, Order } = require('../models');
+const { Address, Order, User } = require('../models');
 const { ensureFields } = require('../utils/validation');
 
 async function listAddresses(req, res) {
@@ -15,8 +15,9 @@ async function createAddress(req, res) {
   if (required.length) {
     return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
   }
-  const { label, recipientName, street, number, complement, neighborhood, city, state, cep, default: isDefault } =
-    req.body;
+  const { label, street, number, complement, neighborhood, city, state, default: isDefault } = req.body;
+  const rawCep = req.body.cep
+  const recipientName = req.body.recipientName || req.body.recipient || null
   const address = await Address.create({
     userId: req.user.id,
     label,
@@ -27,7 +28,7 @@ async function createAddress(req, res) {
     neighborhood,
     city,
     state,
-    cep: String(cep).replace(/\D/g, '').slice(0, 8),
+    cep: String(rawCep).replace(/\D/g, '').slice(0, 8),
     default: Boolean(isDefault),
   });
   if (isDefault) {
@@ -71,11 +72,26 @@ async function listOrders(req, res) {
   return res.json(orders);
 }
 
+async function profile(req, res) {
+  const user = await User.findByPk(req.user.id)
+  if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' })
+  return res.json({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone || null,
+    cpf: user.cpf || null,
+    created_at: user.createdAt,
+    last_login_at: user.lastLoginAt || null,
+  })
+}
+
 module.exports = {
   listAddresses,
   createAddress,
   updateAddress,
   deleteAddress,
   listOrders,
+  profile,
 };
 

@@ -146,44 +146,50 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
                 ))}
               </div>
-              <div className="cart-drawer__coupon">
-                <input
-                  type="text"
-                  placeholder="Cupom de desconto"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                />
-                <button className="button" onClick={handleApplyCoupon}>
-                  Aplicar
-                </button>
-                {couponMessage && <small>{couponMessage}</small>}
-              </div>
-              <div className="cart-drawer__summary">
-                <div className="cart-summary__row">
-                  <span>Subtotal:</span>
-                  <strong>{formatCurrency(totals.subtotalCents)}</strong>
-                </div>
-                {totals.discountCents > 0 && (
-                  <div className="cart-summary__row">
-                    <span>Desconto:</span>
-                    <strong>- {formatCurrency(totals.discountCents)}</strong>
-                  </div>
-                )}
-                <div className="cart-summary__total">
-                  <span>Total:</span>
-                  <strong>{formatCurrency(totals.subtotalCents - totals.discountCents)}</strong>
-                </div>
-              </div>
-              <Link
-                href="/checkout"
-                className="button button--primary button--block"
-                onClick={onClose}
-              >
-                Finalizar compra
-              </Link>
+              
             </>
           )}
         </div>
+        {totals && totals.items.length > 0 && (
+          <div className="cart-drawer__footer">
+            <div className="cart-coupon">
+              <input
+                type="text"
+                placeholder="Cupom de desconto"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+              />
+              <button className="button" onClick={handleApplyCoupon}>
+                Aplicar
+              </button>
+              {couponMessage && <small>{couponMessage}</small>}
+            </div>
+            <div className="cart-summary">
+              <div className="cart-summary__row">
+                <span>Subtotal:</span>
+                <strong>{formatCurrency(totals.subtotalCents)}</strong>
+              </div>
+              {totals.discountCents > 0 && (
+                <div className="cart-summary__row">
+                  <span>Desconto:</span>
+                  <strong>- {formatCurrency(totals.discountCents)}</strong>
+                </div>
+              )}
+              <div className="cart-summary__total">
+                <span>Total:</span>
+                <strong>{formatCurrency(totals.subtotalCents - totals.discountCents)}</strong>
+              </div>
+            </div>
+            <Link
+              href="/checkout"
+              prefetch={false}
+              className="button button--primary button--block cart-checkout"
+              onClick={onClose}
+            >
+              Finalizar compra
+            </Link>
+          </div>
+        )}
       </div>
     </>
   )

@@ -12,6 +12,7 @@ router.put('/addresses/:id', AccountController.updateAddress);
 router.delete('/addresses/:id', AccountController.deleteAddress);
 
 router.get('/orders', AccountController.listOrders);
+router.get('/profile', AccountController.profile);
 
 module.exports = router;
 

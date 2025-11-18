@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const config = require('../config/env');
-const { ensureFields } = require('../utils/validation');
+const { ensureFields, sanitizePhone, sanitizeCpf, isStrongPassword } = require('../utils/validation');
 
 function signToken(user) {
   return jwt.sign({ userId: user.id }, config.jwtSecret, { expiresIn: '24h' });
@@ -14,7 +14,12 @@ async function register(req, res) {
     if (required.length) {
       return res.status(400).json({ error: `Campos obrigatórios ausentes: ${required.join(', ')}` });
     }
-    const { name, email, password, phone, cpf } = req.body;
+    const { name, email, password } = req.body;
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: 'Senha deve ter 6+ caracteres, com letra maiúscula e número.' });
+    }
+    const phone = sanitizePhone(req.body.phone);
+    const cpf = sanitizeCpf(req.body.cpf);
     const exists = await User.findOne({ where: { email } });
     if (exists) {
       return res.status(409).json({ error: 'E-mail já cadastrado.' });
@@ -51,6 +56,7 @@ async function login(req, res) {
     if (!ok) {
       return res.status(401).json({ error: 'Credenciais inválidas.' });
     }
+    await user.update({ lastLoginAt: new Date() });
     const token = signToken(user);
     return res.json({
       token,

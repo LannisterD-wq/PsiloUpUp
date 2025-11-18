@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@modules/layout/components/header"
 import { isAuthenticated, getCurrentUser, clearSession } from "@lib/data/auth"
+import { getProfile, Profile } from "@lib/data/profile"
 import { getOrders, Order } from "@lib/data/orders"
 import { getAddresses, createAddress, Address } from "@lib/data/addresses"
 import { formatCurrency } from "@lib/util/format-currency"
@@ -15,6 +16,9 @@ export default function AccountPage() {
   const [addresses, setAddresses] = useState<Address[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddressForm, setShowAddressForm] = useState(false)
+  const [activeTab, setActiveTab] = useState<'profile'|'addresses'|'orders'>('profile')
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   // Address form
   const [addrLabel, setAddrLabel] = useState("")
@@ -28,6 +32,7 @@ export default function AccountPage() {
   const [addrCep, setAddrCep] = useState("")
 
   useEffect(() => {
+    setMounted(true)
     if (!isAuthenticated()) {
       router.push("/login")
       return
@@ -38,13 +43,21 @@ export default function AccountPage() {
   const loadData = async () => {
     setLoading(true)
     try {
-      const [userOrders, userAddresses] = await Promise.all([
+      const [userOrders, userAddresses, userProfile] = await Promise.all([
         getOrders(),
         getAddresses(),
+        getProfile(),
       ])
       setOrders(userOrders)
       setAddresses(userAddresses)
+      setProfile(userProfile)
     } catch (error) {
+      const msg = (error as any)?.message || String(error)
+      if (msg.includes("Token") || msg.includes("Usuário não encontrado") || msg.includes("401")) {
+        clearSession()
+        router.push("/login")
+        return
+      }
       console.error("Erro ao carregar dados:", error)
     } finally {
       setLoading(false)
@@ -90,9 +103,8 @@ export default function AccountPage() {
     }
   }
 
-  if (!isAuthenticated()) {
-    return null
-  }
+  if (!mounted) return null
+  if (!isAuthenticated()) return null
 
   return (
     <>
@@ -105,69 +117,67 @@ export default function AccountPage() {
           </header>
 
           <div className="row gtr-50 gtr-uniform">
-            <div className="col-12">
-              <article className="bundle-card">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3>Pedidos</h3>
-                  <button id="logout" className="button small" onClick={handleLogout}>
-                    Sair
-                  </button>
-                </div>
-                {loading ? (
-                  <p>Carregando pedidos...</p>
-                ) : orders.length === 0 ? (
-                  <p>Nenhum pedido encontrado.</p>
-                ) : (
-                  <div id="orders-list">
-                    {orders.map((order) => (
-                      <div key={order.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #e5e7eb", borderRadius: "4px" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                          <strong>Pedido #{order.order_number}</strong>
-                          <span>{new Date(order.created_at).toLocaleDateString("pt-BR")}</span>
-                        </div>
-                        <p>Status: {order.status}</p>
-                        <p>Total: {formatCurrency(order.total_cents)}</p>
-                        <div>
-                          <strong>Itens:</strong>
-                          {order.items.map((item) => (
-                            <div key={item.id}>
-                              {item.product_name} x{item.quantity} - {formatCurrency(item.subtotal_cents)}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+            <div className="col-4 col-12-small">
+              <article className="bundle-card" style={{ padding: "0" }}>
+                <ul className="menu" style={{ margin: 0 }}>
+                  <li><button className="site-actions__link" onClick={() => setActiveTab('profile')}>Dados pessoais</button></li>
+                  <li><button className="site-actions__link" onClick={() => setActiveTab('addresses')}>Endereços</button></li>
+                  <li><button className="site-actions__link" onClick={() => setActiveTab('orders')}>Minhas compras</button></li>
+                </ul>
               </article>
             </div>
-            <div className="col-12">
-              <article className="bundle-card">
-                <h3>Endereços</h3>
-                {loading ? (
-                  <p>Carregando endereços...</p>
-                ) : addresses.length === 0 ? (
-                  <p>Nenhum endereço cadastrado.</p>
-                ) : (
-                  <div id="addresses-list">
-                    {addresses.map((address) => (
-                      <div key={address.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #e5e7eb", borderRadius: "4px" }}>
-                        <strong>{address.label || "Endereço"}</strong>
-                        <p>
-                          {address.street}, {address.number || ""} {address.complement ? `- ${address.complement}` : ""}
-                        </p>
-                        <p>
-                          {address.neighborhood} - {address.city}/{address.state} - CEP {address.cep}
-                        </p>
-                        <p>Destinatário: {address.recipient}</p>
-                      </div>
-                    ))}
+            <div className="col-8 col-12-small">
+              {activeTab === 'profile' && (
+                <article className="bundle-card">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h3>Perfil</h3>
+                    <button id="logout" className="button small" onClick={handleLogout}>Sair</button>
                   </div>
-                )}
-                <details>
-                  <summary>Adicionar novo endereço</summary>
-                  <form id="address-form" style={{ marginTop: "1rem" }} onSubmit={handleAddAddress}>
-                    <div className="row gtr-25 gtr-uniform">
+                  {profile ? (
+                    <div style={{ display: "grid", gap: "8px" }}>
+                      <p><strong>Nome:</strong> {profile.name}</p>
+                      <p><strong>E-mail:</strong> {profile.email}</p>
+                      <p><strong>CPF:</strong> {profile.cpf ? profile.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1***.$2***.$3-$4").replace(/\D/g,"").length===11? profile.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1***.$2***.$3-$4"): profile.cpf : "—"}</p>
+                      <p><strong>Telefone:</strong> {profile.phone || "—"}</p>
+                      <p><strong>Registro:</strong> {profile.created_at ? new Date(profile.created_at).toLocaleDateString('pt-BR') : "—"}</p>
+                      <p><strong>Última visita:</strong> {profile.last_login_at ? new Date(profile.last_login_at).toLocaleString('pt-BR') : "—"}</p>
+                      <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
+                        <button className="button">Alterar e-mail</button>
+                        <button className="button">Alterar senha</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>Carregando perfil...</p>
+                  )}
+                </article>
+              )}
+              {activeTab === 'addresses' && (
+                <article className="bundle-card">
+                  <h3>Endereços</h3>
+                  {loading ? (
+                    <p>Carregando endereços...</p>
+                  ) : addresses.length === 0 ? (
+                    <p>Nenhum endereço cadastrado.</p>
+                  ) : (
+                    <div id="addresses-list">
+                      {addresses.map((address) => (
+                        <div key={address.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #e5e7eb", borderRadius: "4px" }}>
+                          <strong>{address.label || "Endereço"}</strong>
+                          <p>
+                            {address.street}, {address.number || ""} {address.complement ? `- ${address.complement}` : ""}
+                          </p>
+                          <p>
+                            {address.neighborhood} - {address.city}/{address.state} - CEP {address.cep}
+                          </p>
+                          <p>Destinatário: {address.recipient}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <details>
+                    <summary>Adicionar novo endereço</summary>
+                    <form id="address-form" style={{ marginTop: "1rem" }} onSubmit={handleAddAddress}>
+                      <div className="row gtr-25 gtr-uniform">
                       <div className="col-6 col-12-small">
                         <label htmlFor="addr-label">Identificação</label>
                         <input
@@ -263,8 +273,40 @@ export default function AccountPage() {
                       {loading ? "Salvando..." : "Salvar endereço"}
                     </button>
                   </form>
-                </details>
-              </article>
+                  </details>
+                </article>
+              )}
+              {activeTab === 'orders' && (
+                <article className="bundle-card">
+                  <h3>Pedidos</h3>
+                  {loading ? (
+                    <p>Carregando pedidos...</p>
+                  ) : orders.length === 0 ? (
+                    <p>Nenhum pedido encontrado.</p>
+                  ) : (
+                    <div id="orders-list">
+                      {orders.map((order) => (
+                        <div key={order.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #e5e7eb", borderRadius: "4px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                            <strong>Pedido #{order.order_number}</strong>
+                            <span>{new Date(order.created_at).toLocaleDateString("pt-BR")}</span>
+                          </div>
+                          <p>Status: {order.status}</p>
+                          <p>Total: {formatCurrency(order.total_cents)}</p>
+                          <div>
+                            <strong>Itens:</strong>
+                            {order.items.map((item) => (
+                              <div key={item.id}>
+                                {item.product_name} x{item.quantity} - {formatCurrency(item.subtotal_cents)}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              )}
             </div>
           </div>
         </section>

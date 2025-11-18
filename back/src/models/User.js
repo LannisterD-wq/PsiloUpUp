@@ -11,6 +11,7 @@ const User = sequelize.define(
     cpf: { type: DataTypes.STRING },
     passwordHash: { type: DataTypes.STRING, allowNull: false },
     role: { type: DataTypes.ENUM('customer', 'admin'), defaultValue: 'customer' },
+    lastLoginAt: { type: DataTypes.DATE, field: 'last_login_at' },
   },
   {
     tableName: 'users',

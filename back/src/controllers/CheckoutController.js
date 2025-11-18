@@ -166,6 +166,7 @@ async function createOrder(req, res) {
         name: req.user.name,
         cpf: req.user.cpf,
       },
+      externalReference: order.id,
     });
 
     await order.update(

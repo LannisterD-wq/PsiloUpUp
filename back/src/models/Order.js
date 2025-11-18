@@ -23,6 +23,9 @@ const Order = sequelize.define(
     shippingTracking: { type: DataTypes.STRING, field: 'shipping_tracking' },
     mercadoPagoPreferenceId: { type: DataTypes.STRING, field: 'mp_preference_id' },
     mercadoPagoOrderId: { type: DataTypes.STRING, field: 'mp_order_id' },
+    paymentId: { type: DataTypes.STRING, field: 'payment_id' },
+    paymentStatus: { type: DataTypes.STRING, field: 'payment_status' },
+    installments: { type: DataTypes.INTEGER, field: 'installments' },
   },
   {
     tableName: 'orders',
