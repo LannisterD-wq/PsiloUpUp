@@ -195,3 +195,5 @@ Após configurar tudo e aguardar a propagação:
 - [Hostinger DNS Guide](https://support.hostinger.com/en/articles/1583299-how-to-manage-dns-records)
 - [Verificar Propagação DNS](https://www.whatsmydns.net)
 
+
+

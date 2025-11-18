@@ -166,3 +166,5 @@ Se aparecer erro 502/503:
 
 Se após seguir todos os passos ainda não funcionar, compartilhe os logs do Railway para análise mais detalhada.
 
+
+

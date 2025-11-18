@@ -25,3 +25,5 @@ echo Aguarde alguns segundos para compilar...
 echo Pressione qualquer tecla para fechar esta janela.
 pause >nul
 
+
+

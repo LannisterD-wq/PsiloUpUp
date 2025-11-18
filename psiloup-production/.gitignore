@@ -5,6 +5,18 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# Dependências instaladas diretamente na pasta back/ (não devem estar aqui)
+# Ignorar todas as pastas de pacotes npm exceto src/, public_html/, e arquivos de config
+back/*
+!back/src/
+!back/public_html/
+!back/package.json
+!back/index.js
+!back/README.md
+!back/PESO_PRODUTOS.md
+!back/ENV_EXAMPLE.txt
+!back/railway.json
+
 # Variáveis de ambiente
 .env
 .env.local
