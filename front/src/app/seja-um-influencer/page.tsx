@@ -112,13 +112,25 @@ export default function InfluencerPage() {
     <>
       <Header />
       <main>
-        <section className="hero hero--catalog" style={{ textAlign: "center" }}>
-          <div className="container">
-            <img src="/images/burn.mind sem fundo.png" alt="PsiloUp Produtos" style={{ width: 220, height: "auto", margin: "0 auto" }} />
+        <section className="hero hero--catalog" style={{ position: "relative", overflow: "hidden", textAlign: "center", minHeight: 320 }}>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/images/PsiloUp_logo_sem_fundo.png"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.45 }}
+          >
+            <source src="/videos/fundo_area_influencer.mp4" type="video/mp4" />
+            <source src="/videos/fundo_area_influencer.webm" type="video/webm" />
+          </video>
+          <div className="container" style={{ position: "relative", zIndex: 1 }}>
             <header className="hero__catalog-header">
               <h1>Seja um Influencer PsiloUp</h1>
               <p>Programa de creators e comunicadores com propósito — multi-step simples e direto.</p>
             </header>
+            <img src="/images/burn.mind sem fundo.png" alt="PsiloUp Produtos" style={{ width: 90, height: "auto", margin: "12px auto 0" }} />
           </div>
         </section>
 

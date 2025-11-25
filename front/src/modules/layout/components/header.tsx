@@ -38,9 +38,9 @@ export default function Header() {
             </button>
             <ul className="site-nav__list">
               <li><Link className="menu-highlight" href="/produtos" prefetch={false}>Comprar</Link></li>
-              <li><Link href="/quem-somos">Quem somos</Link></li>
-              <li><Link href="/formulacao">Formulação</Link></li>
-              <li><Link href="/seja-um-influencer">Seja um Influencer</Link></li>
+              <li><Link href="/quem-somos" prefetch={false}>Quem somos</Link></li>
+              <li><Link href="/formulacao" prefetch={false}>Formulação</Link></li>
+              <li><Link href="/seja-um-influencer" prefetch={false}>Seja um Influencer</Link></li>
             </ul>
           </nav>
           <Link className="site-logo" href="/" aria-label="PsiloUp">
@@ -70,4 +70,3 @@ export default function Header() {
     </>
   )
 }
-
