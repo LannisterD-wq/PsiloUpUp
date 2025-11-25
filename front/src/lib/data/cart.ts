@@ -218,3 +218,36 @@ export async function getCartTotals(): Promise<CartTotals> {
 export function getCartCount(): number {
   return readCart().reduce((sum, item) => sum + item.qty, 0)
 }
+
+// Alias for retrieveCart to match expected imports
+export async function retrieveCart() {
+  const cartData = await getCartTotals()
+  
+  // Transform to match expected cart structure
+  return {
+    id: "cart_" + Date.now(),
+    items: cartData.items.map(item => ({
+      id: item.sku,
+      title: item.product.name,
+      thumbnail: item.product.imageUrl,
+      quantity: item.qty,
+      unit_price: item.product.priceCents,
+      variant: {
+        title: item.product.description?.slice(0, 50) || ""
+      }
+    })),
+    subtotal: cartData.subtotalCents,
+    discount_total: cartData.discountCents,
+    shipping_total: 0,
+    tax_total: 0,
+    total: cartData.subtotalCents - cartData.discountCents,
+  }
+}
+
+// Add missing listCartOptions function
+export async function listCartOptions() {
+  return {
+    shipping_options: [],
+    payment_options: []
+  }
+}
