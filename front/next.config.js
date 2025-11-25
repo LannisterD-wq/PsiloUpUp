@@ -46,6 +46,14 @@ const nextConfig = {
       },
     ]
   },
+  webpack: (config) => {
+    const path = require("path")
+    config.resolve = config.resolve || {}
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias["@medusajs/ui"] = path.join(__dirname, "src/lib/shims/medusa-ui.js")
+    config.resolve.alias["@medusajs/icons"] = path.join(__dirname, "src/lib/shims/medusa-icons.js")
+    return config
+  },
 }
 
 module.exports = nextConfig

@@ -10,6 +10,18 @@ const influencerRoutes = require('./influencers');
 
 const router = Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    ok: true,
+    endpoints: {
+      health: '/health',
+      products: '/api/catalog/products',
+      productBySku: '/api/catalog/products/:sku',
+      quote: '/api/checkout/quote',
+    },
+  });
+});
+
 router.use('/auth', authRoutes);
 router.use('/account', accountRoutes);
 router.use('/catalog', catalogRoutes);
