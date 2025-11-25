@@ -1,0 +1,8 @@
+export { default as Back } from "./back"
+export { default as ChevronDown } from "./chevron-down"
+export { default as FastDelivery } from "./fast-delivery"
+export { default as Minus } from "./minus"
+export { default as Plus } from "./plus"
+export { default as Refresh } from "./refresh"
+export { default as Trash } from "./trash"
+export { default as X } from "./x"

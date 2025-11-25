@@ -52,12 +52,7 @@ const nextConfig = {
     config.resolve.alias = config.resolve.alias || {}
     config.resolve.alias["@medusajs/ui"] = path.join(__dirname, "src/lib/shims/medusa-ui.js")
     config.resolve.alias["@medusajs/icons"] = path.join(__dirname, "src/lib/shims/medusa-icons.js")
-    config.resolve.alias["@modules/common/components/divider"] = path.join(__dirname, "src/lib/shims/common-divider.js")
-    config.resolve.alias["@modules/common/icons/chevron-down"] = path.join(__dirname, "src/lib/shims/icons/chevron-down.js")
-    config.resolve.alias["@modules/common/icons/x"] = path.join(__dirname, "src/lib/shims/icons/x.js")
-    config.resolve.alias["@modules/common/icons/back"] = path.join(__dirname, "src/lib/shims/icons/back.js")
-    config.resolve.alias["@modules/common/icons/fast-delivery"] = path.join(__dirname, "src/lib/shims/icons/fast-delivery.js")
-    config.resolve.alias["@modules/common/icons/refresh"] = path.join(__dirname, "src/lib/shims/icons/refresh.js")
+    // real modules provided in src/modules/common
     return config
   },
 }
