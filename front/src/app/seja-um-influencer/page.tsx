@@ -112,7 +112,7 @@ export default function InfluencerPage() {
     <>
       <Header />
       <main>
-        <section className="hero hero--catalog" style={{ position: "relative", overflow: "hidden", textAlign: "center", minHeight: 320 }}>
+        <section className="hero hero--catalog" style={{ position: "relative", overflow: "hidden", textAlign: "center", minHeight: "80vh" }}>
           <video
             autoPlay
             loop
@@ -125,59 +125,56 @@ export default function InfluencerPage() {
             <source src="/videos/fundo_area_influencer.mp4" type="video/mp4" />
             <source src="/videos/fundo_area_influencer.webm" type="video/webm" />
           </video>
-          <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="container" style={{ position: "relative", zIndex: 1, minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", paddingBottom: 24 }}>
             <header className="hero__catalog-header">
               <h1>Seja um Influencer PsiloUp</h1>
               <p>Programa de creators e comunicadores com propósito — multi-step simples e direto.</p>
             </header>
             <img src="/images/burn.mind sem fundo.png" alt="PsiloUp Produtos" style={{ width: 90, height: "auto", margin: "12px auto 0" }} />
-          </div>
-        </section>
+            <article className="bundle-card" style={{ maxWidth: 520, width: "100%", textAlign: "center", marginTop: 18 }}>
+              <h3>{steps[step]}</h3>
+              {step < 6 && (
+                <p style={{ color: "rgba(247,251,255,0.7)", marginTop: 4 }}>Etapa {step + 1} de {steps.length}</p>
+              )}
 
-        <section className="container" style={{ display: "flex", justifyContent: "center" }}>
-          <article className="bundle-card" style={{ maxWidth: 520, width: "100%", textAlign: "center" }}>
-            <h3>{steps[step]}</h3>
-            {step < 6 && (
-              <p style={{ color: "rgba(247,251,255,0.7)", marginTop: 4 }}>Etapa {step + 1} de {steps.length}</p>
-            )}
-
-            {step === 0 && (
-              <input className="msf-input" type="text" placeholder="Seu nome completo" value={name} onChange={(e) => setName(e.target.value)} />
-            )}
-            {step === 1 && (
-              <input className="msf-input" type="tel" placeholder="WhatsApp (ex.: +55 11 99999-9999)" value={whatsapp} onChange={(e) => setWhatsapp(formatWhatsapp(e.target.value))} />
-            )}
-            {step === 2 && (
-              <input className="msf-input" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-            )}
-            {step === 3 && (
-              <input className="msf-input" type="text" placeholder="@seuinstagram" value={instagram} onChange={(e) => setInstagram(formatInstagram(e.target.value))} />
-            )}
-            {step === 4 && (
-              <input className="msf-input" type="text" placeholder="Número de seguidores" value={followers} onChange={(e) => setFollowers(formatFollowers(e.target.value))} />
-            )}
-            {step === 5 && (
-              <textarea className="msf-textarea" placeholder="Conte sua história (mínimo 50 caracteres)" value={story} onChange={(e) => setStory(e.target.value)} />
-            )}
-            {step === 6 && (
-              <div style={{ padding: 12 }}>
-                <h4>Obrigado!</h4>
-                <p>Vamos analisar seu perfil e entraremos em contato.</p>
-              </div>
-            )}
-
-            {msg && <small style={{ color: "#ff7878" }}>{msg}</small>}
-
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-              <button className="button" onClick={back} disabled={step === 0 || step === 6}>Voltar</button>
-              {step < 5 && (
-                <button className="button button--primary" onClick={next}>Próxima pergunta →</button>
+              {step === 0 && (
+                <input className="msf-input" type="text" placeholder="Seu nome completo" value={name} onChange={(e) => setName(e.target.value)} />
+              )}
+              {step === 1 && (
+                <input className="msf-input" type="tel" placeholder="WhatsApp (ex.: +55 11 99999-9999)" value={whatsapp} onChange={(e) => setWhatsapp(formatWhatsapp(e.target.value))} />
+              )}
+              {step === 2 && (
+                <input className="msf-input" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              )}
+              {step === 3 && (
+                <input className="msf-input" type="text" placeholder="@seuinstagram" value={instagram} onChange={(e) => setInstagram(formatInstagram(e.target.value))} />
+              )}
+              {step === 4 && (
+                <input className="msf-input" type="text" placeholder="Número de seguidores" value={followers} onChange={(e) => setFollowers(formatFollowers(e.target.value))} />
               )}
               {step === 5 && (
-                <button className="button button--primary" onClick={submit} disabled={loading}>{loading ? "Enviando..." : "Enviar →"}</button>
+                <textarea className="msf-textarea" placeholder="Conte sua história (mínimo 50 caracteres)" value={story} onChange={(e) => setStory(e.target.value)} />
               )}
-            </div>
-          </article>
+              {step === 6 && (
+                <div style={{ padding: 12 }}>
+                  <h4>Obrigado!</h4>
+                  <p>Vamos analisar seu perfil e entraremos em contato.</p>
+                </div>
+              )}
+
+              {msg && <small style={{ color: "#ff7878" }}>{msg}</small>}
+
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                <button className="button" onClick={back} disabled={step === 0 || step === 6}>Voltar</button>
+                {step < 5 && (
+                  <button className="button button--primary" onClick={next}>Próxima pergunta →</button>
+                )}
+                {step === 5 && (
+                  <button className="button button--primary" onClick={submit} disabled={loading}>{loading ? "Enviando..." : "Enviar →"}</button>
+                )}
+              </div>
+            </article>
+          </div>
         </section>
       </main>
     </>
