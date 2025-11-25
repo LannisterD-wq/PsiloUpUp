@@ -34,7 +34,7 @@ export default function QuemSomosPage() {
                 PsiloUp nasceu da união entre ciência de ingredientes e respeito à individualidade biológica. Nosso compromisso é construir blends que elevem a performance de forma sustentável, com traço de qualidade e origem rastreável.
               </p>
               <p>
-                Cada fórmula é pensada para resolver demandas reais do dia a dia: foco limpo, energia estável e clareza mental — evitando picos de ansiedade ou queda abrupta de desempenho. Por isso, trabalhamos com extratos padronizados, laudos por lote e documentação acessível via QR code.
+                Cada fórmula é pensada para resolver demandas reais do dia a dia: foco limpo, energia estável e clareza mental — evitando picos de ansiedade ou queda abrupta de desempenho. Por isso, trabalhamos com extratos padronizados, controle de qualidade contínuo e entrega rápida rastreada.
               </p>
               <p>
                 Valorizamos a transparência: indicamos a origem dos ingredientes, explicamos a sinergia entre eles e orientamos o uso estratégico para que você extraia o melhor resultado, no trabalho, no treino ou em competição.

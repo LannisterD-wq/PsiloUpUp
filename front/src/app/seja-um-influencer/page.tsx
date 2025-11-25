@@ -114,7 +114,7 @@ export default function InfluencerPage() {
       <main>
         <section className="hero hero--catalog" style={{ textAlign: "center" }}>
           <div className="container">
-            <img src="/images/Stack_Duplo-removebg-preview.png" alt="PsiloUp Produtos" style={{ width: 220, height: "auto", margin: "0 auto" }} />
+            <img src="/images/burn.mind sem fundo.png" alt="PsiloUp Produtos" style={{ width: 220, height: "auto", margin: "0 auto" }} />
             <header className="hero__catalog-header">
               <h1>Seja um Influencer PsiloUp</h1>
               <p>Programa de creators e comunicadores com propósito — multi-step simples e direto.</p>

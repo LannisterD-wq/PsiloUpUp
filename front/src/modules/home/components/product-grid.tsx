@@ -24,43 +24,50 @@ export default function ProductGrid({ products }: ProductGridProps) {
   const displayProducts = products.map((product) => ({
     ...product,
     highlight: product.sku === "UP-MIND",
-    badge: product.sku === "UP-MIND" ? "Mais pedido" : product.sku === "STACK-DUPLO" ? "10% de desconto" : null,
-    image: `/images/${product.sku === "UP-MIND" ? "MIND" : product.sku === "UP-BURN" ? "BURN" : "Stack_Duplo"}-removebg-preview.png`,
+    badge: product.sku === "UP-MIND" ? "Mais pedido" : product.sku === "STACK-DUPLO" ? `20% de desconto` : null,
+    image:
+      product.sku === "UP-MIND"
+        ? "/images/sem fundo mind.png"
+        : product.sku === "UP-BURN"
+        ? "/images/sem fundo burn.png"
+        : "/images/burn.mind sem fundo.png",
   }))
 
   // Mapear produtos para o formato do HTML antigo
   const getProductInfo = (sku: string) => {
-    if (sku === "UP-MIND") {
-      return {
-        name: "UP MIND • Neuro Performance",
-        description: "Focus Core Blend™ com Lion's Mane, Cordyceps, Ashwagandha, Bacopa e Schisandra para quem precisa de clareza mental sem ansiedade.",
-        bullets: [
-          "30 comprimidos para uso diário.",
-          "Foco, memória e estabilidade emocional.",
-          "Laudos por lote e QR code de rastreio.",
-        ]
-      }
-    } else if (sku === "UP-BURN") {
-      return {
-        name: "UP BURN • Energia & Metabolismo",
-        description: "Energia constante e metabolismo equilibrado com apoio ao emagrecimento, sem picos." ,
-        bullets: [
-          "Apoio ao emagrecimento de forma equilibrada",
-          "Energia diária estável e sem picos",
-          "Absorção otimizada para melhor desempenho",
-        ]
-      }
-    } else {
-      return {
-        name: "Stack dupla • Foco + Energia",
-        description: "Dois potes (UP MIND + UP BURN) para quem precisa render de manhã até o pós-treino sem perder controle em nenhuma etapa.",
-        bullets: [
-          "Economia de 10% no ciclo completo.",
-          "Atendimento dedicado para ajustes e renovação.",
-          "Perfeito para creators, líderes comerciais e atletas mentais.",
-        ]
-      }
-    }
+        if (sku === "UP-MIND") {
+          return {
+            name: "UP MIND • Neuro Performance",
+            description: "Focus Core Blend™ com Lion's Mane, Cordyceps, Ashwagandha, Bacopa e Schisandra para quem precisa de clareza mental sem ansiedade.",
+            bullets: [
+              "Clareza mental e foco contínuo",
+              "Memória e produtividade diária",
+              "Estabilidade emocional sem ansiedade",
+            ]
+          }
+        } else if (sku === "UP-BURN") {
+          return {
+            name: "UP BURN • Energia & Metabolismo",
+            description: "Energia constante e metabolismo equilibrado com apoio ao emagrecimento, sem picos." ,
+            bullets: [
+              "Energia estável ao longo do dia",
+              "Metabolismo equilibrado e disposição",
+              "Apoio ao emagrecimento sem picos",
+            ]
+          }
+        } else {
+          return {
+            name: "Stack dupla • Foco + Energia",
+            description: "Dois potes (UP MIND + UP BURN) para quem precisa render de manhã até o pós-treino sem perder controle em nenhuma etapa.",
+            bullets: [
+              "Foco + energia em rotina intensa",
+              "Performance mental e física combinadas",
+              "Economia de 20% no ciclo completo.",
+              "Rotina produtiva do começo ao fim",
+              "Flexibilidade: foco pela manhã, energia no treino",
+            ]
+          }
+        }
   }
 
   return (
@@ -87,10 +94,10 @@ export default function ProductGrid({ products }: ProductGridProps) {
                 <li key={idx}>{bullet}</li>
               ))}
             </ul>
-            <div className="bundle-card__price">
-              <strong>{formatCurrency(product.priceCents)}</strong>
-              <span>ou {Math.floor(product.priceCents / 100 / 3)}x de {formatCurrency(installments)}</span>
-            </div>
+          <div className="bundle-card__price">
+            <strong>{formatCurrency(product.priceCents)}</strong>
+            <span>ou até 12x via cartão de crédito</span>
+          </div>
             <div className="bundle-card__cta">
               <button
                 className="button button--primary"
@@ -108,4 +115,3 @@ export default function ProductGrid({ products }: ProductGridProps) {
     </div>
   )
 }
-

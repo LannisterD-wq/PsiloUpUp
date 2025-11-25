@@ -28,12 +28,58 @@ export interface ProductListResponse {
  * Lista produtos do nosso backend
  */
 export async function listProductsPsiloUp(): Promise<PsiloUpProduct[]> {
+  const fallback: PsiloUpProduct[] = [
+    {
+      id: 1,
+      sku: 'UP-MIND',
+      name: 'UP MIND - Neuro Performance',
+      description: 'Suplemento para foco e performance cognitiva.',
+      priceCents: 17900,
+      weightGrams: 150,
+      lengthCm: 8,
+      widthCm: 8,
+      heightCm: 12,
+      imageUrl: '/images/MIND.png',
+      active: true,
+      stockQuantity: 100,
+      stockManaged: false,
+    },
+    {
+      id: 2,
+      sku: 'UP-BURN',
+      name: 'UP BURN - Energia & Metabolismo',
+      description: 'Suplemento para energia e metabolismo acelerado.',
+      priceCents: 17900,
+      weightGrams: 150,
+      lengthCm: 8,
+      widthCm: 8,
+      heightCm: 12,
+      imageUrl: '/images/BURN.png',
+      active: true,
+      stockQuantity: 100,
+      stockManaged: false,
+    },
+    {
+      id: 3,
+      sku: 'STACK-DUPLO',
+      name: 'Stack Duplo - UP MIND + UP BURN',
+      description: 'Combo completo com UP Mind e UP Burn.',
+      priceCents: 32200,
+      weightGrams: 300,
+      lengthCm: 10,
+      widthCm: 16,
+      heightCm: 14,
+      imageUrl: '/images/Stack_Duplo.png',
+      active: true,
+      stockQuantity: 50,
+      stockManaged: false,
+    },
+  ]
   try {
     const products = await apiClient.get<PsiloUpProduct[]>('/catalog/products')
-    return products || []
-  } catch (error) {
-    console.error('Erro ao buscar produtos:', error)
-    return []
+    return Array.isArray(products) ? products : fallback
+  } catch {
+    return fallback
   }
 }
 
@@ -44,9 +90,9 @@ export async function getProductBySku(sku: string): Promise<PsiloUpProduct | nul
   try {
     const product = await apiClient.get<PsiloUpProduct>(`/catalog/products/${sku}`)
     return product || null
-  } catch (error) {
-    console.error('Erro ao buscar produto:', error)
-    return null
+  } catch {
+    const all = await listProductsPsiloUp()
+    return all.find((p) => p.sku === sku) || null
   }
 }
 

@@ -58,6 +58,7 @@ if (fs.existsSync(STATIC_DIR) && config.env !== 'production') {
   });
 }
 
+// Em produção, o backend atua apenas como API
 if (config.env === 'production') {
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api')) {
@@ -81,4 +82,3 @@ module.exports = {
   app,
   start,
 };
-

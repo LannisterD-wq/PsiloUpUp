@@ -20,22 +20,12 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     }
   }
 
-  const candidates = product.sku === "UP-MIND"
-    ? [
-        "/images/sem fundo mind.png",
-        "/images/MIND-removebg-preview.png",
-      ]
-    : product.sku === "UP-BURN"
-    ? [
-        "/images/sem fundo burn.png",
-        "/images/BURN-removebg-preview.png",
-      ]
-    : [
-        "/images/burn.mind sem fundo.png",
-        "/images/Stack_Duplo-removebg-preview.png",
-      ]
-  const [idx, setIdx] = useState<number>(0)
-  const imageUrl = candidates[idx]
+  const preferNew = product.sku === "UP-MIND" ? "/images/sem-fundo-mind.png"
+    : product.sku === "UP-BURN" ? "/images/sem-fundo-burn.png"
+    : "/images/burn-mind-sem-fundo.png"
+  const fallback = `/images/${product.sku === "UP-MIND" ? "MIND" : product.sku === "UP-BURN" ? "BURN" : "Stack_Duplo"}-removebg-preview.png`
+  const [imageUrl, setImageUrl] = useState<string>(preferNew)
+
   const isMind = product.sku === "UP-MIND"
   const isBurn = product.sku === "UP-BURN"
   const isStack = product.sku === "STACK-DUPLO"
@@ -91,7 +81,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             <div className="hero__actions">
               <div className="bundle-card__price">
                 <strong>{formatCurrency(product.priceCents)}</strong>
-                <span>ou até 12x via cartão de crédito</span>
+                <span>Ex.: 3x de {formatCurrency(Math.ceil(product.priceCents / 3))}</span>
               </div>
               <div className="bundle-card__cta">
                 <button
@@ -110,77 +100,28 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 <>
                   <div className="hero__badge">30 comprimidos para uso diário</div>
                   <div className="hero__badge">Foco, memória e estabilidade emocional</div>
-                  <div className="hero__badge">Entrega rápida rastreada</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
                 </>
               )}
               {isBurn && (
                 <>
                   <div className="hero__badge">Metabolismo e energia balanceados</div>
                   <div className="hero__badge">Apoio ao emagrecimento equilibrado</div>
-                  <div className="hero__badge">Entrega rápida rastreada</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
                 </>
               )}
               {isStack && (
                 <>
                   <div className="hero__badge">Dois potes: Mind + Burn</div>
                   <div className="hero__badge">Desempenho mental e físico</div>
-                  <div className="hero__badge">Entrega rápida rastreada</div>
+                  <div className="hero__badge">Laudos por lote e rastreio de envio</div>
                 </>
               )}
             </div>
           </div>
           <div className="hero__media">
-            <img src={imageUrl} alt={product.name} onError={() => setIdx(Math.min(idx + 1, candidates.length - 1))} />
+            <img src={imageUrl} alt={product.name} onError={() => setImageUrl(fallback)} />
           </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="container stack">
-          <div>
-            <h2 className="section-title">Uso sugerido & resultados</h2>
-          </div>
-          <div className="guides">
-            <div className="guide-card">
-              <h4>Posologia</h4>
-              <ul>
-                <li>1 cápsula ao acordar com água.</li>
-                <li>Associe a café ou chá verde se desejar.</li>
-                <li>Evite consumir após as 17h para não impactar o sono.</li>
-              </ul>
-            </div>
-            <div className="guide-card">
-              <h4>Linha do tempo</h4>
-              <ul>
-                {timeBullets.map((t, i) => (
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="guide-card">
-              <h4>Para quem é</h4>
-              <ul>
-                {whoBullets.map((w, i) => (
-                  <li key={i}>{w}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="container stack">
-          <div>
-            <h2 className="section-title">Compra segura</h2>
-            <p className="section-copy">
-              Pagamento via Mercado Pago com confirmação imediata. Envio rastreado e atendimento humano.
-            </p>
-          </div>
-          <p className="section-copy" style={{ fontSize: "0.8rem", color: "rgba(255, 255, 255, 0.55)" }}>
-            Suplemento alimentar. Não é medicamento. Consulte seu médico ou nutricionista em caso de condições
-            pré-existentes.
-          </p>
         </div>
       </section>
     </>

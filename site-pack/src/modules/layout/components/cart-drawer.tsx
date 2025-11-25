@@ -106,8 +106,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   <div key={item.sku} className="cart-item">
                     <img
                       className="cart-item__image"
-                      src={item.sku === "UP-MIND" ? "/images/sem fundo mind.png" : item.sku === "UP-BURN" ? "/images/sem fundo burn.png" : "/images/burn.mind sem fundo.png"}
+                      src={item.sku === "UP-MIND" ? "/images/sem-fundo-mind.png" : item.sku === "UP-BURN" ? "/images/sem-fundo-burn.png" : "/images/burn-mind-sem-fundo.png"}
                       alt={item.product.name}
+                      onError={(e) => {
+                        const target = e.currentTarget
+                        target.src = `/images/${item.sku === "UP-MIND" ? "MIND" : item.sku === "UP-BURN" ? "BURN" : "Stack_Duplo"}-removebg-preview.png`
+                      }}
                     />
                     <div className="cart-item__meta">
                       <strong>{item.product.name}</strong>

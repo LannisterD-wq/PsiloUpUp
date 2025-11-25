@@ -10,7 +10,7 @@
 
 .announcement-bar__inner {
 	padding: 4px 0;
-	font-size: 0.74rem;
+	font-size: 0.68rem;
 	letter-spacing: 0.05em;
 }
 
@@ -193,6 +193,14 @@
 	transform: scale(1.04);
 }
 
+
+
+/* Imagens responsivas dentro dos cards */
+.bundle-card img {
+	max-width: 100%;
+	height: auto;
+}
+
 .hero__metrics li {
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -269,7 +277,7 @@
 		font-weight: 700;
 	}
 	.announcement-bar__inner p { margin: 0; }
-	@media (max-width: 640px) { .announcement-bar__inner { font-size: 0.74rem; } }
+	@media (max-width: 640px) { .announcement-bar__inner { font-size: 0.7rem; } }
 	
 	/* Packs — tipografia compacta (global) */
 	#packs .bundle-card h3 { font-size: 1.08rem; line-height: 1.24; }

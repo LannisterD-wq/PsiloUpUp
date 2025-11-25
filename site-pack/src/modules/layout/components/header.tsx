@@ -10,7 +10,6 @@ export default function Header() {
   const [cartCount, setCartCount] = useState(0)
   const [cartOpen, setCartOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [navOpen, setNavOpen] = useState(false)
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -30,14 +29,14 @@ export default function Header() {
       </div>
       <header className="site-header site-header--home">
         <div className="container site-header__wrap">
-          <nav className={`site-nav ${navOpen ? "active" : ""}`}>
-            <button className="site-nav__toggle" aria-label="Abrir menu" onClick={() => setNavOpen((v) => !v)}>
+          <nav className="site-nav">
+            <button className="site-nav__toggle" aria-label="Abrir menu">
               <span></span>
               <span></span>
               <span></span>
             </button>
             <ul className="site-nav__list">
-              <li><Link className="menu-highlight" href="/produtos" prefetch={false}>Comprar</Link></li>
+              <li><Link className="menu-highlight" href="/produtos">Comprar</Link></li>
               <li><Link href="/quem-somos">Quem somos</Link></li>
               <li><Link href="/formulacao">Formulação</Link></li>
               <li><Link href="/seja-um-influencer">Seja um Influencer</Link></li>
@@ -70,4 +69,3 @@ export default function Header() {
     </>
   )
 }
-

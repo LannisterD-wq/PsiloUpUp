@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ProdutosPage() {
-  const products = await listProductsPsiloUp()
+  const items = await listProductsPsiloUp().catch(() => [])
 
   return (
     <>
@@ -21,7 +21,7 @@ export default async function ProdutosPage() {
               <h1>Produtos PsiloUp</h1>
               <p>Escolha seu stack e finalize sua compra.</p>
             </header>
-            <ProductGrid products={products} />
+            <ProductGrid products={Array.isArray(items) ? items : []} />
           </div>
         </section>
       </main>
