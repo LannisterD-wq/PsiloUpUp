@@ -1,6 +1,7 @@
 # Node
 node_modules/
 npm-debug.log*
+*.rar
 
 # Front (Next.js)
 front/.next/
