@@ -9,10 +9,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const products = await listProductsPsiloUp()
-  return products.map((product) => ({
-    sku: product.sku,
-  }))
+  return []
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
