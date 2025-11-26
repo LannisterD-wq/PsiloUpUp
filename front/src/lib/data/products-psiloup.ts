@@ -64,7 +64,7 @@ export async function listProductsPsiloUp(): Promise<PsiloUpProduct[]> {
       sku: 'STACK-DUPLO',
       name: 'Stack Duplo - UP MIND + UP BURN',
       description: 'Combo completo com UP Mind e UP Burn.',
-      priceCents: 34990,
+      priceCents: 33990,
       weightGrams: 300,
       lengthCm: 10,
       widthCm: 16,
@@ -81,7 +81,7 @@ export async function listProductsPsiloUp(): Promise<PsiloUpProduct[]> {
     const overrides: Record<string, number> = {
       'UP-MIND': 19990,
       'UP-BURN': 17990,
-      'STACK-DUPLO': 34990,
+      'STACK-DUPLO': 33990,
     }
     return base.map((p) => ({
       ...p,
@@ -102,7 +102,7 @@ export async function getProductBySku(sku: string): Promise<PsiloUpProduct | nul
     const overrides: Record<string, number> = {
       'UP-MIND': 19990,
       'UP-BURN': 17990,
-      'STACK-DUPLO': 34990,
+      'STACK-DUPLO': 33990,
     }
     return {
       ...product,
