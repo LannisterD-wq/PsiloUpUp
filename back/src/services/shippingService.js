@@ -148,15 +148,62 @@ function calculateFallback({ items, destinationCep }) {
   };
 }
 
+async function getSuperFreteQuote({ destinationCep, items }) {
+  const { token, endpoint, customerId } = config.shipping.superfrete || {}
+  if (!token) return null
+
+  // Support both explicit endpoint or default Frete Barato style as common provider
+  const url = endpoint || (customerId ? `https://admin.fretebarato.com/lojaintegrada/price/v1/json/${customerId}` : null)
+  if (!url) return null
+
+  // Build payload: zipcode, amount (subtotal in BRL), skus with dimensions in cm and weight kg
+  const subtotalCents = items.reduce((acc, i) => acc + Number(i.price_cents || 0) * Number(i.qty || 1), 0)
+  const payload = {
+    zipcode: destinationCep,
+    amount: Math.round(subtotalCents) / 100,
+    skus: items.map((i) => ({
+      sku: i.sku || String(i.id || ''),
+      price: Math.round(Number(i.price_cents || 0)) / 100,
+      quantity: Number(i.qty || 1),
+      length: Math.max(1, Number(i.length_cm || config.shipping.defaultPackage.length)),
+      width: Math.max(1, Number(i.width_cm || config.shipping.defaultPackage.width)),
+      height: Math.max(1, Number(i.height_cm || config.shipping.defaultPackage.height)),
+      weight: Math.max(0.01, Number(i.weight_grams || config.shipping.defaultPackage.weight * 1000) / 1000),
+    })),
+  }
+
+  try {
+    const resp = await axios.post(url, payload, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      timeout: 15000,
+    })
+    const quotes = resp.data?.quotes || resp.data?.services || []
+    const services = quotes
+      .map((q) => ({
+        carrier: String(q.name || q.carrier || ''),
+        name: String(q.service || q.name || ''),
+        price_cents: Math.round(Number(q.price || q.cost || 0) * 100),
+        delivery_time_days: Number(q.days || q.delivery_time || 0),
+      }))
+      .filter((s) => Number.isFinite(s.price_cents) && s.price_cents >= 0)
+    if (services.length) {
+      return { services }
+    }
+  } catch (e) {
+    return null
+  }
+  return null
+}
+
 async function quote({ destinationCep, items: rawItems }) {
   const items = await mapCartItems(rawItems);
   if (!items.length) {
     throw new Error('Itens inválidos');
   }
+  const superFrete = await getSuperFreteQuote({ destinationCep, items });
+  if (superFrete) return superFrete;
   const melhorEnvio = await getMelhorEnvioQuote({ destinationCep, items });
-  if (melhorEnvio) {
-    return melhorEnvio;
-  }
+  if (melhorEnvio) return melhorEnvio;
   return calculateFallback({ destinationCep, items });
 }
 

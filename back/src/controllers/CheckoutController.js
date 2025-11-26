@@ -132,31 +132,23 @@ async function createOrder(req, res) {
       }
     }
 
-    const mpItems = items.map((item) => ({
-      title: item.product.name,
-      quantity: item.qty,
-      currency_id: 'BRL',
-      unit_price: item.unit_price_cents / 100,
-    }));
+    const mpItems = []
+    items.forEach((item) => {
+      const price = Math.max(0.01, item.unit_price_cents / 100)
+      mpItems.push({
+        title: item.product.name,
+        quantity: item.qty,
+        currency_id: 'BRL',
+        unit_price: price,
+      })
+    })
     if (shippingCents > 0) {
       mpItems.push({
         title: shippingSelection.name ? `Frete - ${shippingSelection.name}` : 'Frete',
         quantity: 1,
         currency_id: 'BRL',
-        unit_price: shippingCents / 100,
-      });
-    }
-    if (discountCents > 0 && mpItems.length) {
-      let remainingDiscount = discountCents;
-      mpItems.forEach((mpItem) => {
-        if (remainingDiscount <= 0) return;
-        const itemTotalCents = Math.round(mpItem.unit_price * 100 * mpItem.quantity);
-        if (itemTotalCents <= 0) return;
-        const deduction = Math.min(itemTotalCents, remainingDiscount);
-        const newTotalCents = itemTotalCents - deduction;
-        mpItem.unit_price = Math.max(0, Math.round(newTotalCents / mpItem.quantity) / 100);
-        remainingDiscount -= deduction;
-      });
+        unit_price: Math.max(0.01, shippingCents / 100),
+      })
     }
 
     const preference = await paymentService.createPreference({

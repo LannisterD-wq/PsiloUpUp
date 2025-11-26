@@ -5,8 +5,18 @@ async function createPreference({ items, payer, externalReference }) {
   if (!config.mercadoPago.accessToken) {
     throw new Error('Configuração Mercado Pago ausente.');
   }
+  // Ensure items have positive unit_price and non-zero quantity
+  const safeItems = (items || [])
+    .map((it) => ({
+      title: it.title,
+      quantity: Math.max(1, Number(it.quantity || 1)),
+      currency_id: String(it.currency_id || 'BRL'),
+      unit_price: Math.max(0.01, Number(it.unit_price || 0)),
+    }))
+    .filter((it) => Number.isFinite(it.unit_price) && it.unit_price > 0)
+
   const payload = {
-    items,
+    items: safeItems,
     back_urls: config.mercadoPago.backUrls,
     auto_return: 'approved',
     notification_url: config.mercadoPago.notificationUrl,
@@ -19,7 +29,7 @@ async function createPreference({ items, payer, externalReference }) {
       identification: payer.cpf
         ? {
             type: 'CPF',
-            number: payer.cpf,
+            number: String(payer.cpf).replace(/\D/g, ''),
           }
         : undefined,
     };

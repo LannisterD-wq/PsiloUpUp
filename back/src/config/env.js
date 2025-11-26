@@ -34,15 +34,20 @@ const config = {
     freeShippingThresholdCents: Number(env('FREE_SHIPPING_THRESHOLD_CENTS', 39900)),
     flatShippingCents: Number(env('SHIP_BASE_CENTS', 1990)),
     melhorEnvioToken: env('MELHORENVIO_TOKEN', ''),
+    superfrete: {
+      token: env('SUPERFRETE_TOKEN', ''),
+      endpoint: env('SUPERFRETE_ENDPOINT', ''),
+      customerId: env('SUPERFRETE_CUSTOMER_ID', ''),
+    },
   },
   mercadoPago: {
     accessToken: env('MP_ACCESS_TOKEN', ''),
     backUrls: {
-      success: env('BACK_URL_SUCCESS', 'http://localhost:8080/'),
-      failure: env('BACK_URL_FAILURE', 'http://localhost:8080/'),
-      pending: env('BACK_URL_PENDING', 'http://localhost:8080/'),
+      success: env('BACK_URL_SUCCESS', env('APP_BASE_URL', 'http://localhost:8080/')),
+      failure: env('BACK_URL_FAILURE', env('APP_BASE_URL', 'http://localhost:8080/')),
+      pending: env('BACK_URL_PENDING', env('APP_BASE_URL', 'http://localhost:8080/')),
     },
-    notificationUrl: env('MP_NOTIFICATION_URL', 'http://localhost:3000/api/payment/webhook'),
+    notificationUrl: env('MP_NOTIFICATION_URL', env('API_BASE_URL', 'http://localhost:3000') + '/api/payment/webhook'),
   },
 };
 
