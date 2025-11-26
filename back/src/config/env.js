@@ -46,13 +46,16 @@ const config = {
   mercadoPago: {
     accessToken: env('MP_ACCESS_TOKEN', ''),
     backUrls: {
-      success: env('BACK_URL_SUCCESS', env('APP_BASE_URL', 'http://localhost:8080/')),
-      failure: env('BACK_URL_FAILURE', env('APP_BASE_URL', 'http://localhost:8080/')),
-      pending: env('BACK_URL_PENDING', env('APP_BASE_URL', 'http://localhost:8080/')),
+      success: env('BACK_URL_SUCCESS', env('APP_BASE_URL', 'http://localhost:8080')),
+      failure: env('BACK_URL_FAILURE', env('APP_BASE_URL', 'http://localhost:8080')),
+      pending: env('BACK_URL_PENDING', env('APP_BASE_URL', 'http://localhost:8080')),
     },
-    notificationUrl: env('MP_NOTIFICATION_URL', env('API_BASE_URL', 'http://localhost:3000') + '/api/payment/webhook'),
+    notificationUrl: (() => {
+      const raw = env('MP_NOTIFICATION_URL', env('API_BASE_URL', 'http://localhost:3000') + '/api/payment/webhook')
+      // Em produção, forçar https
+      return isProduction ? raw.replace(/^http:/, 'https:') : raw
+    })(),
   },
 };
 
 module.exports = config;
-

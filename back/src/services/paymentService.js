@@ -5,6 +5,11 @@ async function createPreference({ items, payer, externalReference }) {
   if (!config.mercadoPago.accessToken) {
     throw new Error('Configuração Mercado Pago ausente.');
   }
+  const notifUrl = String(config.mercadoPago.notificationUrl || '')
+  const urlOk = /^https?:\/\/.+/.test(notifUrl)
+  if (!urlOk) {
+    throw new Error('notification_url inválido. Configure MP_NOTIFICATION_URL com uma URL pública (https) para o webhook.')
+  }
   // Ensure items have positive unit_price and non-zero quantity
   const safeItems = (items || [])
     .map((it) => ({
@@ -19,7 +24,7 @@ async function createPreference({ items, payer, externalReference }) {
     items: safeItems,
     back_urls: config.mercadoPago.backUrls,
     auto_return: 'approved',
-    notification_url: config.mercadoPago.notificationUrl,
+    notification_url: notifUrl,
     external_reference: externalReference ? String(externalReference) : undefined,
   };
   if (payer && payer.email) {
@@ -52,4 +57,3 @@ async function createPreference({ items, payer, externalReference }) {
 module.exports = {
   createPreference,
 };
-
