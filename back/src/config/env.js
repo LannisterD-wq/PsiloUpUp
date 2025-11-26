@@ -38,6 +38,9 @@ const config = {
       token: env('SUPERFRETE_TOKEN', ''),
       endpoint: env('SUPERFRETE_ENDPOINT', ''),
       customerId: env('SUPERFRETE_CUSTOMER_ID', ''),
+      services: env('SUPERFRETE_SERVICES', '1,2,17'),
+      useInsurance: env('SUPERFRETE_USE_INSURANCE', 'false') === 'true',
+      userAgent: env('SUPERFRETE_USER_AGENT', 'PsiloUp (contato@psiloup.com.br)'),
     },
   },
   mercadoPago: {

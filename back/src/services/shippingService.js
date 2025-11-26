@@ -152,29 +152,34 @@ async function getSuperFreteQuote({ destinationCep, items }) {
   const { token, endpoint, customerId } = config.shipping.superfrete || {}
   if (!token) return null
 
-  // Support both explicit endpoint or default Frete Barato style as common provider
-  const url = endpoint || (customerId ? `https://admin.fretebarato.com/lojaintegrada/price/v1/json/${customerId}` : null)
+  // Explicit SuperFrete endpoint or configured fallback
+  const url = endpoint || null
   if (!url) return null
 
-  // Build payload: zipcode, amount (subtotal in BRL), skus with dimensions in cm and weight kg
+  // Build payload following SuperFrete docs: from/to/services/options + products
   const subtotalCents = items.reduce((acc, i) => acc + Number(i.price_cents || 0) * Number(i.qty || 1), 0)
   const payload = {
-    zipcode: destinationCep,
-    amount: Math.round(subtotalCents) / 100,
-    skus: items.map((i) => ({
-      sku: i.sku || String(i.id || ''),
-      price: Math.round(Number(i.price_cents || 0)) / 100,
+    from: { postal_code: config.shipping.originCep },
+    to: { postal_code: destinationCep },
+    services: config.shipping.superfrete.services || '1,2,17',
+    options: {
+      own_hand: false,
+      receipt: false,
+      insurance_value: Math.round(subtotalCents) / 100,
+      use_insurance_value: !!config.shipping.superfrete.useInsurance,
+    },
+    products: items.map((i) => ({
       quantity: Number(i.qty || 1),
-      length: Math.max(1, Number(i.length_cm || config.shipping.defaultPackage.length)),
-      width: Math.max(1, Number(i.width_cm || config.shipping.defaultPackage.width)),
       height: Math.max(1, Number(i.height_cm || config.shipping.defaultPackage.height)),
+      width: Math.max(1, Number(i.width_cm || config.shipping.defaultPackage.width)),
+      length: Math.max(1, Number(i.length_cm || config.shipping.defaultPackage.length)),
       weight: Math.max(0.01, Number(i.weight_grams || config.shipping.defaultPackage.weight * 1000) / 1000),
     })),
   }
 
   try {
     const resp = await axios.post(url, payload, {
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'User-Agent': config.shipping.superfrete.userAgent },
       timeout: 15000,
     })
     const quotes = resp.data?.quotes || resp.data?.services || []
