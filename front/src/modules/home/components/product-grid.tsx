@@ -20,11 +20,19 @@ export default function ProductGrid({ products }: ProductGridProps) {
     }
   }
 
+  // Calcular desconto do stack com base nos preços atuais
+  const mindPrice = products.find((p) => p.sku === "UP-MIND")?.priceCents || 0
+  const burnPrice = products.find((p) => p.sku === "UP-BURN")?.priceCents || 0
+  const stackPrice = products.find((p) => p.sku === "STACK-DUPLO")?.priceCents || 0
+  const computedDiscount = mindPrice && burnPrice && stackPrice
+    ? Math.max(0, Math.round((1 - stackPrice / (mindPrice + burnPrice)) * 100))
+    : 0
+
   // Map products to display format - usar imagens sem fundo
   const displayProducts = products.map((product) => ({
     ...product,
     highlight: product.sku === "UP-MIND",
-    badge: product.sku === "UP-MIND" ? "Mais pedido" : product.sku === "STACK-DUPLO" ? `20% de desconto` : null,
+    badge: product.sku === "UP-MIND" ? "Mais pedido" : product.sku === "STACK-DUPLO" && computedDiscount > 0 ? `${computedDiscount}% de desconto` : null,
     image:
       product.sku === "UP-MIND"
         ? "/images/sem fundo mind.png"
@@ -62,7 +70,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             bullets: [
               "Foco + energia em rotina intensa",
               "Performance mental e física combinadas",
-              "Economia de 20% no ciclo completo.",
+              `${computedDiscount}% de economia no ciclo completo`,
               "Rotina produtiva do começo ao fim",
               "Flexibilidade: foco pela manhã, energia no treino",
             ]
