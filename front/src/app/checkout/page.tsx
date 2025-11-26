@@ -162,7 +162,7 @@ export default function CheckoutPage() {
                 placeholder="CEP (somente números)"
                 value={cep.replace(/\D/g, '').replace(/(\d{5})(\d{0,3})/, (m, p1, p2) => p2 ? `${p1}-${p2}` : p1)}
                 onChange={(e) => setCep(e.target.value)}
-                maxLength={8}
+                maxLength={9}
               />
               <button
                 className="button button--primary"
@@ -175,21 +175,31 @@ export default function CheckoutPage() {
             {shippingQuote?.services && shippingQuote.services.length > 0 && (
               <div className="shipping-options" style={{ marginTop: "10px" }}>
                 {shippingQuote.services.map((service, index) => (
-                  <label key={index} htmlFor={`ship-${index}`} className="ship-option">
-                    <input
-                      id={`ship-${index}`}
-                      type="radio"
-                      name="ship_service"
-                      value={index}
-                      checked={selectedShippingIndex === index}
-                      onChange={() => { setSelectedShippingIndex(index); setSelectedShipping(service) }}
-                    />
-                    <span>{service.carrier} {service.name}</span>
-                    <span className="ship-price">{formatCurrency(service.price_cents)}</span>
-                    {service.delivery_time_days && (
-                      <small>{service.delivery_time_days} dia(s)</small>
-                    )}
-                  </label>
+                  <div
+                    key={index}
+                    onClick={() => { setSelectedShippingIndex(index); setSelectedShipping(service) }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: 12,
+                      border: selectedShippingIndex === index ? '2px solid #5ce1e6' : '1px solid #e5e7eb',
+                      borderRadius: 8,
+                      marginBottom: 8,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 600 }}>{service.carrier}</div>
+                      <div style={{ opacity: 0.8 }}>{service.name}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontWeight: 600 }}>{service.price_cents === 0 ? 'Frete grátis' : formatCurrency(service.price_cents)}</div>
+                      {service.delivery_time_days && (
+                        <small>{service.delivery_time_days} dia(s)</small>
+                      )}
+                    </div>
+                  </div>
                 ))}
                 {shippingQuote?.source && (
                   <small style={{ display: 'block', marginTop: 6, opacity: 0.7 }}>Fonte: {shippingQuote.source}</small>
