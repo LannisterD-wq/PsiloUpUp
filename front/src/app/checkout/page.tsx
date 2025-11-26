@@ -20,6 +20,7 @@ export default function CheckoutPage() {
   const [cep, setCep] = useState("")
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote | null>(null)
   const [selectedShipping, setSelectedShipping] = useState<any>(null)
+  const [selectedShippingIndex, setSelectedShippingIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -70,7 +71,13 @@ export default function CheckoutPage() {
       })))
       setShippingQuote(quote)
       if (quote.services && quote.services.length > 0) {
+        setSelectedShippingIndex(0)
         setSelectedShipping(quote.services[0])
+      } else if (typeof quote.cost_cents === 'number') {
+        const fallback = { carrier: 'Correios', name: quote.free ? 'Frete Grátis' : 'Padrão', price_cents: quote.cost_cents }
+        setShippingQuote({ ...quote, services: [fallback] })
+        setSelectedShippingIndex(0)
+        setSelectedShipping(fallback)
       }
       setMessage("Frete calculado!")
       setStep(3)
@@ -164,13 +171,14 @@ export default function CheckoutPage() {
             {shippingQuote?.services && shippingQuote.services.length > 0 && (
               <div className="shipping-options" style={{ marginTop: "10px" }}>
                 {shippingQuote.services.map((service, index) => (
-                  <label key={index} className="ship-option">
+                  <label key={index} htmlFor={`ship-${index}`} className="ship-option">
                     <input
+                      id={`ship-${index}`}
                       type="radio"
                       name="ship_service"
                       value={index}
-                      checked={selectedShipping === service}
-                      onChange={() => setSelectedShipping(service)}
+                      checked={selectedShippingIndex === index}
+                      onChange={() => { setSelectedShippingIndex(index); setSelectedShipping(service) }}
                     />
                     <span>{service.carrier} {service.name}</span>
                     <span className="ship-price">{formatCurrency(service.price_cents)}</span>
@@ -228,8 +236,9 @@ export default function CheckoutPage() {
               {addresses.length > 0 ? (
                 <div>
                   {addresses.map((address) => (
-                    <label key={address.id} className="address-option">
+                    <label key={address.id} htmlFor={`addr-${address.id}`} className="address-option">
                       <input
+                        id={`addr-${address.id}`}
                         type="radio"
                         name="address_id"
                         value={address.id}

@@ -116,6 +116,14 @@ function calculateFallback({ items, destinationCep }) {
       cost_cents: 0,
       free: true,
       threshold_cents: config.shipping.freeShippingThresholdCents,
+      services: [
+        {
+          carrier: 'Correios',
+          name: 'Frete Grátis',
+          price_cents: 0,
+          delivery_time_days: 5,
+        },
+      ],
     };
   }
 
@@ -129,6 +137,14 @@ function calculateFallback({ items, destinationCep }) {
     free: false,
     threshold_cents: config.shipping.freeShippingThresholdCents,
     weight_grams: totalWeightGrams,
+    services: [
+      {
+        carrier: 'Correios',
+        name: 'Padrão',
+        price_cents: cost,
+        delivery_time_days: 5,
+      },
+    ],
   };
 }
 
