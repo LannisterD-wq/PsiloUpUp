@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [selectedShippingIndex, setSelectedShippingIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
+  const [recalcRequested, setRecalcRequested] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -81,6 +82,7 @@ export default function CheckoutPage() {
       }
       setMessage("Frete calculado!")
       setStep(3)
+      setRecalcRequested(false)
     } catch (error: any) {
       setMessage(error.message || "Erro ao calcular frete")
     } finally {
@@ -190,6 +192,11 @@ export default function CheckoutPage() {
                 {shippingQuote?.source && (
                   <small style={{ display: 'block', marginTop: 6, opacity: 0.7 }}>Fonte: {shippingQuote.source}</small>
                 )}
+                <div style={{ marginTop: 8 }}>
+                  <button className="button" onClick={() => { setRecalcRequested(true); handleCalculateShipping() }} disabled={loading || !cep || cep.length !== 8}>
+                    {loading ? "Recalculando..." : "Recalcular frete"}
+                  </button>
+                </div>
               </div>
             )}
             {message && <small>{message}</small>}
@@ -238,24 +245,38 @@ export default function CheckoutPage() {
               <h4>Endereço de entrega</h4>
               {addresses.length > 0 ? (
                 <div>
-                  {addresses.map((address) => (
-                    <label key={address.id} htmlFor={`addr-${address.id}`} className="address-option">
-                      <input
-                        id={`addr-${address.id}`}
-                        type="radio"
-                        name="address_id"
-                        value={address.id}
-                        checked={selectedAddressId === address.id}
-                        onChange={() => {
-                          setSelectedAddressId(address.id)
-                          setCep(address.cep.replace(/\D/g, ""))
-                        }}
-                      />
-                      <span>
-                        {address.street}, {address.number || ""} - {address.city}/{address.state} - CEP {address.cep}
-                      </span>
-                    </label>
-                  ))}
+                  {addresses.map((address) => {
+                    const active = selectedAddressId === address.id
+                    return (
+                      <div key={address.id} style={{ border: active ? "2px solid #5ce1e6" : "1px solid #e5e7eb", borderRadius: 8, padding: 12, marginBottom: 8 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <strong>{address.label || "Endereço"}</strong>
+                          <button
+                            className="button"
+                            onClick={() => {
+                              setSelectedAddressId(address.id)
+                              const newCep = address.cep.replace(/\D/g, "")
+                              setCep(newCep)
+                              setRecalcRequested(true)
+                            }}
+                          >
+                            Selecionar
+                          </button>
+                        </div>
+                        <div style={{ marginTop: 6 }}>
+                          <span>{address.street}, {address.number || ""} {address.complement ? `- ${address.complement}` : ""}</span>
+                        </div>
+                        <div style={{ opacity: 0.8 }}>
+                          <span>{address.neighborhood ? `${address.neighborhood} - ` : ""}{address.city}/{address.state} - CEP {address.cep}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <div>
+                    <button className="button" onClick={() => recalcRequested ? handleCalculateShipping() : setMessage("Selecione um endereço e calcule o frete") } disabled={loading || !selectedAddressId}>
+                      {loading ? "Calculando..." : "Calcular frete para o endereço selecionado"}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <p>Nenhum endereço cadastrado.</p>
