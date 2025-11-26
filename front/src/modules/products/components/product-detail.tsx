@@ -143,11 +143,32 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           <div className="guides">
             <div className="guide-card">
               <h4>Posologia</h4>
-              <ul>
-                <li>1 cápsula ao acordar com água.</li>
-                <li>Associe a café ou chá verde se desejar.</li>
-                <li>Evite consumir após as 17h para não impactar o sono.</li>
-              </ul>
+              {isStack ? (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+                  <div>
+                    <strong>UP MIND</strong>
+                    <ul>
+                      <li>1 cápsula ao acordar com água.</li>
+                      <li>Use pela manhã em rotinas de foco.</li>
+                      <li>Evite consumir após as 17h.</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>UP BURN</strong>
+                    <ul>
+                      <li>1 cápsula no meio do dia ou 45 min antes do treino.</li>
+                      <li>Mantenha hidratação adequada.</li>
+                      <li>Evite uso noturno para não impactar o sono.</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <ul>
+                  <li>1 cápsula ao acordar com água.</li>
+                  <li>Associe a café ou chá verde se desejar.</li>
+                  <li>Evite consumir após as 17h para não impactar o sono.</li>
+                </ul>
+              )}
             </div>
             <div className="guide-card">
               <h4>Linha do tempo</h4>

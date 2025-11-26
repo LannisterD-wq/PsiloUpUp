@@ -150,6 +150,30 @@ img {
 	border-radius: 2px;
 }
 
+/* Mobile header alignment */
+@media (max-width: 768px) {
+  .site-header__wrap {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+  .site-nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(2px);
+  }
+  .site-nav__list {
+    display: none;
+  }
+  .site-logo img {
+    width: 56px;
+  }
+  .site-actions {
+    justify-content: flex-end;
+    gap: 12px;
+  }
+}
+
 .site-nav__list {
 	display: flex;
 	gap: 12px;
@@ -1202,4 +1226,3 @@ img {
 .site-header a {
 	border-bottom: none;
 }
-
