@@ -146,7 +146,24 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
                 ))}
               </div>
-              
+              {(() => {
+                const threshold = Number(process.env.NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD_CENTS || 39900)
+                const subtotal = totals.subtotalCents - totals.discountCents
+                const remaining = Math.max(0, threshold - subtotal)
+                const percent = Math.min(100, Math.floor((subtotal / threshold) * 100))
+                return (
+                  <div className="free-shipping-nudge" style={{ marginTop: "12px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem" }}>
+                      <span>{remaining === 0 ? "Frete grátis habilitado!" : "Faltam"} {remaining === 0 ? "" : formatCurrency(remaining)} {remaining === 0 ? "" : "para frete grátis"}</span>
+                      <span>{percent}%</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 4, alignItems: "center", marginTop: 6 }}>
+                      <div style={{ height: 6, background: "linear-gradient(90deg,#7c7cff,#5ce1e6)", width: `${percent}%`, borderRadius: 9999 }}></div>
+                      <div style={{ height: 6, background: "#e5e7eb", width: `${100 - percent}%`, borderRadius: 9999 }}></div>
+                    </div>
+                  </div>
+                )
+              })()}
             </>
           )}
         </div>

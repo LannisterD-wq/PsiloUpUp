@@ -137,7 +137,12 @@ export default function AccountPage() {
                     <div style={{ display: "grid", gap: "8px" }}>
                       <p><strong>Nome:</strong> {profile.name}</p>
                       <p><strong>E-mail:</strong> {profile.email}</p>
-                      <p><strong>CPF:</strong> {profile.cpf ? profile.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1***.$2***.$3-$4").replace(/\D/g,"").length===11? profile.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1***.$2***.$3-$4"): profile.cpf : "—"}</p>
+                      <p><strong>CPF:</strong> {(() => {
+                        const digits = String(profile.cpf || '').replace(/\D/g, '')
+                        if (digits.length !== 11) return profile.cpf || '—'
+                        const masked = `${digits.slice(0,3)}.***.***-${digits.slice(9,11)}`
+                        return masked
+                      })()}</p>
                       <p><strong>Telefone:</strong> {profile.phone || "—"}</p>
                       <p><strong>Registro:</strong> {profile.created_at ? new Date(profile.created_at).toLocaleDateString('pt-BR') : "—"}</p>
                       <p><strong>Última visita:</strong> {profile.last_login_at ? new Date(profile.last_login_at).toLocaleString('pt-BR') : "—"}</p>
