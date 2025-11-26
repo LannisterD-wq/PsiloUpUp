@@ -18,6 +18,7 @@ export default function CheckoutPage() {
   const [addresses, setAddresses] = useState<Address[]>([])
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null)
   const [cep, setCep] = useState("")
+  const [shippingCep, setShippingCep] = useState<string>("")
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote | null>(null)
   const [selectedShipping, setSelectedShipping] = useState<any>(null)
   const [selectedShippingIndex, setSelectedShippingIndex] = useState<number | null>(null)
@@ -82,6 +83,7 @@ export default function CheckoutPage() {
       }
       setMessage("Frete calculado!")
       setStep(3)
+      setShippingCep(cep)
       setRecalcRequested(false)
     } catch (error: any) {
       setMessage(error.message || "Erro ao calcular frete")
@@ -158,8 +160,8 @@ export default function CheckoutPage() {
                 id="shipping-cep"
                 className="cart-cep__input"
                 placeholder="CEP (somente números)"
-                value={cep}
-                onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
+                value={cep.replace(/\D/g, '').replace(/(\d{5})(\d{0,3})/, (m, p1, p2) => p2 ? `${p1}-${p2}` : p1)}
+                onChange={(e) => setCep(e.target.value)}
                 maxLength={8}
               />
               <button
@@ -193,7 +195,7 @@ export default function CheckoutPage() {
                   <small style={{ display: 'block', marginTop: 6, opacity: 0.7 }}>Fonte: {shippingQuote.source}</small>
                 )}
                 <div style={{ marginTop: 8 }}>
-                  <button className="button" onClick={() => { setRecalcRequested(true); handleCalculateShipping() }} disabled={loading || !cep || cep.length !== 8}>
+                  <button className="button" onClick={() => { setRecalcRequested(true); handleCalculateShipping() }} disabled={loading || cep.replace(/\D/g, '').length !== 8}>
                     {loading ? "Recalculando..." : "Recalcular frete"}
                   </button>
                 </div>
@@ -258,6 +260,12 @@ export default function CheckoutPage() {
                               const newCep = address.cep.replace(/\D/g, "")
                               setCep(newCep)
                               setRecalcRequested(true)
+                              if (shippingCep && newCep !== shippingCep) {
+                                setSelectedShipping(null)
+                                setSelectedShippingIndex(null)
+                                setShippingQuote(null)
+                                setMessage("CEP do endereço diferente do frete. Recalcule o frete.")
+                              }
                             }}
                           >
                             Selecionar
@@ -292,7 +300,7 @@ export default function CheckoutPage() {
               <button
                 className="button button--primary"
                 onClick={handleSubmitOrder}
-                disabled={loading || !selectedShipping || !selectedAddressId}
+                disabled={loading || !selectedShipping || !selectedAddressId || (shippingCep && cep !== shippingCep)}
               >
                 Pagar com Mercado Pago
               </button>

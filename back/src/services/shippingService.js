@@ -220,6 +220,22 @@ async function quote({ destinationCep, items: rawItems }) {
   if (!items.length) {
     throw new Error('Itens inválidos');
   }
+  const subtotalCents = items.reduce((acc, i) => acc + Number(i.price_cents || 0) * Number(i.qty || 1), 0)
+  if (subtotalCents >= config.shipping.freeShippingThresholdCents) {
+    return {
+      source: 'promo',
+      services: [
+        {
+          carrier: 'Promoção',
+          name: 'Frete Grátis',
+          price_cents: 0,
+          delivery_time_days: 5,
+        },
+      ],
+      free: true,
+      threshold_cents: config.shipping.freeShippingThresholdCents,
+    }
+  }
   const superFrete = await getSuperFreteQuote({ destinationCep, items });
   if (superFrete) return superFrete;
   const melhorEnvio = await getMelhorEnvioQuote({ destinationCep, items });
