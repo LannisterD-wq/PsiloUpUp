@@ -1,11 +1,9 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@modules/layout/components/header"
 import { login, register, isAuthenticated } from "@lib/data/auth"
 
-export default function LoginPage() {
+function LoginInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") || "/"
@@ -14,11 +12,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
-  // Login form
   const [loginEmail, setLoginEmail] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
 
-  // Register form
   const [regName, setRegName] = useState("")
   const [regEmail, setRegEmail] = useState("")
   const [regPhone, setRegPhone] = useState("")
@@ -97,118 +93,126 @@ export default function LoginPage() {
   }
 
   return (
+    <main>
+      <section id="main" className="container">
+        <header className="major">
+          <h2>Minha conta</h2>
+          <p>Entre com sua conta ou cadastre-se para acompanhar seus pedidos, endereços e checkout.</p>
+        </header>
+
+        <div className="row gtr-50 gtr-uniform">
+          <div className="col-6 col-12-small">
+            <article className="bundle-card">
+              <h3>Entrar</h3>
+              <form id="login-form" onSubmit={handleLogin}>
+                <label htmlFor="login-email">E-mail</label>
+                <input
+                  type="email"
+                  id="login-email"
+                  required
+                  placeholder="seu@email.com"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                />
+                <label htmlFor="login-password">Senha</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  required
+                  placeholder="Sua senha"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+                <small className="form-hint">Use pelo menos 6 caracteres.</small>
+                <button type="submit" className="button primary" disabled={loading}>
+                  {loading ? "Entrando..." : "Entrar"}
+                </button>
+                {message && <p>{message}</p>}
+              </form>
+            </article>
+          </div>
+          <div className="col-6 col-12-small">
+            <article className="bundle-card">
+              <h3>Cadastrar</h3>
+              <form id="register-form" onSubmit={handleRegister}>
+                <label htmlFor="reg-name">Nome completo</label>
+                <input
+                  type="text"
+                  id="reg-name"
+                  required
+                  placeholder="Seu nome completo"
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                />
+                <label htmlFor="reg-email">E-mail</label>
+                <input
+                  type="email"
+                  id="reg-email"
+                  required
+                  placeholder="seu@email.com"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                />
+                <label htmlFor="reg-phone">Celular</label>
+                <input
+                  type="tel"
+                  id="reg-phone"
+                  placeholder="(11) 99999-9999"
+                  value={regPhone}
+                  onChange={(e) => setRegPhone(formatPhone(e.target.value))}
+                />
+                <label htmlFor="reg-cpf">CPF</label>
+                <input
+                  type="text"
+                  id="reg-cpf"
+                  placeholder="000.000.000-00"
+                  value={regCpf}
+                  onChange={(e) => setRegCpf(formatCpf(e.target.value))}
+                />
+                <label htmlFor="reg-password">Senha</label>
+                <input
+                  type="password"
+                  id="reg-password"
+                  required
+                  placeholder="Crie uma senha"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                />
+                <small className={isStrongPassword(regPassword) ? "form-hint ok" : "form-hint warn"}>
+                  Mínimo 6 caracteres, com letra maiúscula e número.
+                </small>
+                <label htmlFor="reg-password2">Confirmar senha</label>
+                <input
+                  type="password"
+                  id="reg-password2"
+                  required
+                  placeholder="Repita sua senha"
+                  value={regPassword2}
+                  onChange={(e) => setRegPassword2(e.target.value)}
+                />
+                <small className={regPassword && regPassword === regPassword2 ? "form-hint ok" : "form-hint warn"}>
+                  As senhas devem coincidir.
+                </small>
+                <button type="submit" className="button" disabled={loading}>
+                  {loading ? "Cadastrando..." : "Cadastrar"}
+                </button>
+                {message && <p>{message}</p>}
+              </form>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+export default function LoginPage() {
+  return (
     <>
       <Header />
-      <main>
-        <section id="main" className="container">
-          <header className="major">
-            <h2>Minha conta</h2>
-            <p>Entre com sua conta ou cadastre-se para acompanhar seus pedidos, endereços e checkout.</p>
-          </header>
-
-          <div className="row gtr-50 gtr-uniform">
-            <div className="col-6 col-12-small">
-              <article className="bundle-card">
-                <h3>Entrar</h3>
-                <form id="login-form" onSubmit={handleLogin}>
-                  <label htmlFor="login-email">E-mail</label>
-                  <input
-                    type="email"
-                    id="login-email"
-                    required
-                    placeholder="seu@email.com"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                  />
-                  <label htmlFor="login-password">Senha</label>
-                  <input
-                    type="password"
-                    id="login-password"
-                    required
-                    placeholder="Sua senha"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                  />
-                  <small className="form-hint">Use pelo menos 6 caracteres.</small>
-                  <button type="submit" className="button primary" disabled={loading}>
-                    {loading ? "Entrando..." : "Entrar"}
-                  </button>
-                  {message && <p>{message}</p>}
-                </form>
-              </article>
-            </div>
-            <div className="col-6 col-12-small">
-              <article className="bundle-card">
-                <h3>Cadastrar</h3>
-                <form id="register-form" onSubmit={handleRegister}>
-                  <label htmlFor="reg-name">Nome completo</label>
-                  <input
-                    type="text"
-                    id="reg-name"
-                    required
-                    placeholder="Seu nome completo"
-                    value={regName}
-                    onChange={(e) => setRegName(e.target.value)}
-                  />
-                  <label htmlFor="reg-email">E-mail</label>
-                  <input
-                    type="email"
-                    id="reg-email"
-                    required
-                    placeholder="seu@email.com"
-                    value={regEmail}
-                    onChange={(e) => setRegEmail(e.target.value)}
-                  />
-                  <label htmlFor="reg-phone">Celular</label>
-                  <input
-                    type="tel"
-                    id="reg-phone"
-                    placeholder="(11) 99999-9999"
-                    value={regPhone}
-                    onChange={(e) => setRegPhone(formatPhone(e.target.value))}
-                  />
-                  <label htmlFor="reg-cpf">CPF</label>
-                  <input
-                    type="text"
-                    id="reg-cpf"
-                    placeholder="000.000.000-00"
-                    value={regCpf}
-                    onChange={(e) => setRegCpf(formatCpf(e.target.value))}
-                  />
-                  <label htmlFor="reg-password">Senha</label>
-                  <input
-                    type="password"
-                    id="reg-password"
-                    required
-                    placeholder="Crie uma senha"
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                  />
-                  <small className={isStrongPassword(regPassword) ? "form-hint ok" : "form-hint warn"}>
-                    Mínimo 6 caracteres, com letra maiúscula e número.
-                  </small>
-                  <label htmlFor="reg-password2">Confirmar senha</label>
-                  <input
-                    type="password"
-                    id="reg-password2"
-                    required
-                    placeholder="Repita sua senha"
-                    value={regPassword2}
-                    onChange={(e) => setRegPassword2(e.target.value)}
-                  />
-                  <small className={regPassword && regPassword === regPassword2 ? "form-hint ok" : "form-hint warn"}>
-                    As senhas devem coincidir.
-                  </small>
-                  <button type="submit" className="button" disabled={loading}>
-                    {loading ? "Cadastrando..." : "Cadastrar"}
-                  </button>
-                  {message && <p>{message}</p>}
-                </form>
-              </article>
-            </div>
-          </div>
-        </section>
-      </main>
+      <Suspense fallback={<div>Carregando...</div>}>
+        <LoginInner />
+      </Suspense>
     </>
   )
 }
