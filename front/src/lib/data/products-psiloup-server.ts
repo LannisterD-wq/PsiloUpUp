@@ -33,7 +33,16 @@ export async function listProductsPsiloUp(): Promise<PsiloUpProduct[]> {
     const response = await fetch(`${apiUrl}/catalog/products`, { cache: 'no-store' })
     if (!response.ok) return fallback
     const products = await response.json()
-    return Array.isArray(products) ? products : fallback
+    const base = Array.isArray(products) ? products : fallback
+    const overrides: Record<string, number> = {
+      'UP-MIND': 19990,
+      'UP-BURN': 17990,
+      'STACK-DUPLO': 34990,
+    }
+    return base.map((p: PsiloUpProduct) => ({
+      ...p,
+      priceCents: overrides[p.sku] ?? p.priceCents,
+    }))
   } catch {
     return fallback
   }
@@ -48,7 +57,16 @@ export async function getProductBySku(sku: string): Promise<PsiloUpProduct | nul
     const response = await fetch(`${apiUrl}/catalog/products/${sku}`, { cache: 'no-store' })
     if (!response.ok) return null
     const product = await response.json()
-    return product || null
+    if (!product) return null
+    const overrides: Record<string, number> = {
+      'UP-MIND': 19990,
+      'UP-BURN': 17990,
+      'STACK-DUPLO': 34990,
+    }
+    return {
+      ...product,
+      priceCents: overrides[product.sku] ?? product.priceCents,
+    }
   } catch {
     const all = await listProductsPsiloUp()
     return all.find((p) => p.sku === sku) || null
