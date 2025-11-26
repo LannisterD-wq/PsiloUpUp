@@ -20,6 +20,7 @@ export interface ShippingQuote {
   cost_cents?: number
   free?: boolean
   selectedIndex?: number
+  source?: string
 }
 
 export async function calculateShipping(

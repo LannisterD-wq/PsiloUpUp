@@ -187,6 +187,9 @@ export default function CheckoutPage() {
                     )}
                   </label>
                 ))}
+                {shippingQuote?.source && (
+                  <small style={{ display: 'block', marginTop: 6, opacity: 0.7 }}>Fonte: {shippingQuote.source}</small>
+                )}
               </div>
             )}
             {message && <small>{message}</small>}

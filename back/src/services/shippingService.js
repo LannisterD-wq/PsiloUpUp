@@ -97,7 +97,7 @@ async function getMelhorEnvioQuote({ destinationCep, items }) {
       }))
       .filter((service) => Number.isFinite(service.price_cents) && service.price_cents >= 0);
     if (services.length) {
-      return { services };
+      return { source: 'melhorenvio', services };
     }
   } catch (error) {
     return null;
@@ -113,6 +113,7 @@ function calculateFallback({ items, destinationCep }) {
 
   if (free) {
     return {
+      source: 'fallback',
       cost_cents: 0,
       free: true,
       threshold_cents: config.shipping.freeShippingThresholdCents,
@@ -133,6 +134,7 @@ function calculateFallback({ items, destinationCep }) {
   const cost = Math.round(base * weightKg * regionMultiplier);
 
   return {
+    source: 'fallback',
     cost_cents: cost,
     free: false,
     threshold_cents: config.shipping.freeShippingThresholdCents,
@@ -192,7 +194,7 @@ async function getSuperFreteQuote({ destinationCep, items }) {
       }))
       .filter((s) => Number.isFinite(s.price_cents) && s.price_cents >= 0)
     if (services.length) {
-      return { services }
+      return { source: 'superfrete', services }
     }
   } catch (e) {
     return null
