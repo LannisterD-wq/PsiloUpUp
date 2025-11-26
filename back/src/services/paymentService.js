@@ -38,6 +38,7 @@ async function createPreference({ items, payer, externalReference }) {
     headers: {
       Authorization: `Bearer ${config.mercadoPago.accessToken}`,
       'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     timeout: 15000,
   });

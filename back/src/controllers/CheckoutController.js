@@ -78,7 +78,7 @@ async function createOrder(req, res) {
     const required = ensureFields(req.body, ['items', 'address_id', 'shipping']);
     if (required.length) {
       await transaction.rollback();
-      return res.status(400).json({ error: 'Dados incompletos.' });
+      return res.status(400).json({ error: `Dados incompletos: ${required.join(', ')}` });
     }
     const items = await resolveItems(req.body.items);
     const address = await Address.findOne({ where: { id: req.body.address_id, userId: req.user.id } });
@@ -96,7 +96,12 @@ async function createOrder(req, res) {
     }
 
     const shippingSelection = req.body.shipping || {};
-    const shippingCents = Number(shippingSelection.price_cents || shippingSelection.cost_cents || 0);
+    const shippingCentsRaw = shippingSelection.price_cents ?? shippingSelection.cost_cents ?? 0;
+    const shippingCents = Number(shippingCentsRaw);
+    if (!Number.isFinite(shippingCents) || shippingCents < 0) {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'Frete inválido.' });
+    }
     const totalCents = Math.max(0, subtotalCents + shippingCents - discountCents);
 
     const order = await Order.create(
@@ -176,7 +181,12 @@ async function createOrder(req, res) {
     });
   } catch (error) {
     await transaction.rollback();
-    return res.status(400).json({ error: error.message || 'Falha ao criar pedido.' });
+    const detail = error && error.response && error.response.data ? error.response.data : null;
+    if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
+      console.error('Checkout createOrder error:', error.message, detail || '');
+    }
+    const message = detail && detail.message ? detail.message : (detail && detail.error ? detail.error : (error.message || 'Falha ao criar pedido.'));
+    return res.status(400).json({ error: message });
   }
 }
 
