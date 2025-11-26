@@ -47,11 +47,7 @@ export default function Header() {
             <img src="/images/PsiloUp_logo_sem_fundo.png" alt="PsiloUp" />
           </Link>
           <div className="site-actions">
-            <Link className="site-actions__link" href="/account">Minha conta</Link>
-            <button className="site-actions__icon" onClick={() => setSearchOpen(true)} aria-label="Pesquisar">
-              <i className="fas fa-search"></i>
-            </button>
-            <Link className="site-actions__icon" href="/account" aria-label="Conta">
+            <Link className="site-actions__icon" href="/account" aria-label="Minha conta">
               <i className="far fa-user"></i>
             </Link>
             <button
@@ -61,6 +57,9 @@ export default function Header() {
             >
               <i className="fas fa-shopping-basket"></i>
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </button>
+            <button className="site-actions__icon" onClick={() => setSearchOpen(true)} aria-label="Pesquisar">
+              <i className="fas fa-search"></i>
             </button>
           </div>
         </div>
