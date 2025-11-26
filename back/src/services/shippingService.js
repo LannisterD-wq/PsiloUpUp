@@ -155,7 +155,7 @@ async function getSuperFreteQuote({ destinationCep, items }) {
   if (!token) return null
 
   // Explicit SuperFrete endpoint or configured fallback
-  const url = endpoint || null
+  const url = endpoint ? `${String(endpoint).replace(/\/$/, '')}/api/v0/calculator` : null
   if (!url) return null
 
   // Build payload following SuperFrete docs: from/to/services/options + products
@@ -167,36 +167,49 @@ async function getSuperFreteQuote({ destinationCep, items }) {
     options: {
       own_hand: false,
       receipt: false,
-      insurance_value: Math.round(subtotalCents) / 100,
-      use_insurance_value: !!config.shipping.superfrete.useInsurance,
+      insurance_value: config.shipping.superfrete.useInsurance ? Math.round(subtotalCents) / 100 : 0,
     },
     products: items.map((i) => ({
       quantity: Number(i.qty || 1),
-      height: Math.max(1, Number(i.height_cm || config.shipping.defaultPackage.height)),
-      width: Math.max(1, Number(i.width_cm || config.shipping.defaultPackage.width)),
-      length: Math.max(1, Number(i.length_cm || config.shipping.defaultPackage.length)),
-      weight: Math.max(0.01, Number(i.weight_grams || config.shipping.defaultPackage.weight * 1000) / 1000),
+      height: Math.max(2, Number(i.height_cm || config.shipping.defaultPackage.height)),
+      width: Math.max(11, Number(i.width_cm || config.shipping.defaultPackage.width)),
+      length: Math.max(18, Number(i.length_cm || config.shipping.defaultPackage.length)),
+      weight: Math.max(0.3, Number(i.weight_grams || config.shipping.defaultPackage.weight * 1000) / 1000),
     })),
   }
 
   try {
+    if (!config.isProduction) {
+      console.log('SuperFrete request', { url, payload })
+    }
     const resp = await axios.post(url, payload, {
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'User-Agent': config.shipping.superfrete.userAgent },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': config.shipping.superfrete.userAgent },
       timeout: 15000,
     })
-    const quotes = resp.data?.quotes || resp.data?.services || []
+    if (!config.isProduction) {
+      console.log('SuperFrete response', { status: resp.status, sample: Array.isArray(resp.data) ? resp.data.slice(0, 2) : resp.data })
+    }
+    const quotes = Array.isArray(resp.data) ? resp.data : []
     const services = quotes
+      .filter((q) => !q.error)
       .map((q) => ({
-        carrier: String(q.name || q.carrier || ''),
-        name: String(q.service || q.name || ''),
-        price_cents: Math.round(Number(q.price || q.cost || 0) * 100),
-        delivery_time_days: Number(q.days || q.delivery_time || 0),
+        id: String(q.id || ''),
+        carrier: String(q.company?.name || 'Correios'),
+        name: String(q.name || ''),
+        price_cents: Math.round(Number(q.price || 0) * 100),
+        delivery_time_days: Number(q.delivery_time || (q.delivery_range && q.delivery_range.max) || 0),
+        discount: q.discount ? Math.round(Number(q.discount) * 100) : 0,
       }))
-      .filter((s) => Number.isFinite(s.price_cents) && s.price_cents >= 0)
+      .filter((s) => Number.isFinite(s.price_cents) && s.price_cents > 0)
+      .sort((a, b) => a.price_cents - b.price_cents)
     if (services.length) {
       return { source: 'superfrete', services }
     }
   } catch (e) {
+    if (!config.isProduction) {
+      console.error('SuperFrete error', e.response?.data || e.message)
+    }
+    // swallow and fall back
     return null
   }
   return null
