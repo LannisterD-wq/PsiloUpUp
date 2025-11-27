@@ -51,9 +51,14 @@ const config = {
       pending: env('BACK_URL_PENDING', env('APP_BASE_URL', 'http://localhost:8080')),
     },
     notificationUrl: (() => {
-      const raw = env('MP_NOTIFICATION_URL', env('API_BASE_URL', 'http://localhost:3000') + '/api/payment/webhook')
-      // Em produção, forçar https
-      return isProduction ? raw.replace(/^http:/, 'https:') : raw
+      let raw = env('MP_NOTIFICATION_URL', env('API_BASE_URL', 'http://localhost:3000') + '/api/payment/webhook')
+      if (!/^https?:\/\//.test(raw)) {
+        raw = `https://${raw.replace(/^\/*/, '')}`
+      }
+      if (isProduction) {
+        raw = raw.replace(/^http:/, 'https:')
+      }
+      return raw
     })(),
   },
 };
